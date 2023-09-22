@@ -1,0 +1,143 @@
+const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const jsonServer = require("json-server");
+const path = require("path");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "static/uploads"));
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + " - " + file.originalname);
+  },
+});
+const upload = multer({ storage });
+const staticFolder = path.join(path.resolve(__dirname, "static"));
+const jwtSecretKey = "pargaks";
+const server = jsonServer.create();
+const router = jsonServer.router(path.resolve(__dirname, "db.json"));
+server.use(jsonServer.defaults({ static: staticFolder }));
+server.use(jsonServer.bodyParser);
+
+function generateToken(user) {
+  const token = jwt.sign({ userId: user.id }, jwtSecretKey, {
+    expiresIn: "1h",
+  });
+  return token;
+}
+// Нужно для небольшой задержки, чтобы запрос проходил не мгновенно, имитация реального апи
+server.use(async (req, res, next) => {
+  await new Promise((res) => {
+    setTimeout(res, 800); //hide because use withAuth()
+  });
+  next();
+});
+
+server.post("/file", upload.single("file"), function (req, res) {
+  res.json({ filepath: `/uploads/${req.file.filename}` });
+});
+
+// Эндпоинт для логина
+server.post("/login", (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const db = JSON.parse(
+      fs.readFileSync(path.resolve(__dirname, "db.json"), "UTF-8")
+    );
+    const { users = [] } = db;
+
+    // Находим в бд пользователя с таким username и password
+    const userFromBd = users.find(
+      (user) => user.email === username && user.password === password
+    );
+
+    if (userFromBd) {
+      // Генерируем токен и отправляем его пользователю
+      const token = generateToken(userFromBd);
+      return res.json({ user: userFromBd, token });
+    }
+
+    return res.status(403).json({ message: "User not found" });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: e.message });
+  }
+});
+// Эндпоинт для регистрации новых пользователей
+server.post("/register", (req, res) => {
+  try {
+    const { email, password, first_name, last_name } = req.body;
+    const db = JSON.parse(
+      fs.readFileSync(path.resolve(__dirname, "db.json"), "UTF-8")
+    );
+    const { users = [] } = db;
+
+    // Проверяем, что пользователь с таким email не существует
+    const userExists = users.some((user) => user.email === email);
+
+    if (userExists) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    // Генерируем уникальный ID для нового пользователя (просто для примера, в реальном приложении используйте UUID или другой метод)
+    const newUserId = users.length + 1;
+
+    // Создаем нового пользователя
+    const newUser = {
+      id: newUserId,
+      email,
+      password,
+      first_name,
+      last_name,
+    };
+
+    // Добавляем пользователя в базу данных
+    users.push(newUser);
+    fs.writeFileSync(
+      path.resolve(__dirname, "db.json"),
+      JSON.stringify(db, null, 2),
+      "UTF-8"
+    );
+
+    // Генерируем токен для нового пользователя
+    const token = generateToken(newUser);
+    // Отправляем успешный ответ с токеном
+    return res.json({ user: newUser, token });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: e.message });
+  }
+});
+// проверяем, авторизован ли пользователь
+server.use((req, res, next) => {
+  // разрешаем публичный доступ без авторизации
+  if (req.path === "/users") {
+    return next();
+  }
+
+  // для всех остальных маршрутов запрещаем
+  // Получаем токен из заголовка Authorization
+  const token = req.headers.authorization;
+
+  if (!token) {
+    //return res.status(403).json({ message: "AUTH ERROR" });
+  }
+
+  // Проверяем токен
+  jwt.verify(token, jwtSecretKey, (err, decoded) => {
+    if (err) {
+      //return res.status(403).json({ message: "Invalid token" });
+    }
+
+    // Если токен валиден, добавляем информацию о пользователе в объект запроса
+    req.user = decoded;
+    next();
+  });
+});
+server.use(router);
+
+// запуск сервера
+server.listen(8000, () => {
+  console.log("server is running on 8000 port");
+});

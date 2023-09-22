@@ -1,0 +1,33 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
+
+function withAuth(Component) {
+  return function AuthenticatedComponent(props) {
+    const navigate = useNavigate();
+    const token = localStorage.getItem("token");
+    const [isLoading, setIsLoading] = useState(true); // Флаг состояния загрузки
+
+    useEffect(() => {
+      if (token) {
+        const decodedToken = jwt_decode(token);
+        const currentTime = Date.now() / 1000;
+
+        if (decodedToken.exp < currentTime) {
+          navigate("/login");
+          console.log("Токен истек. redirect...");
+        }
+      } else {
+        navigate("/login");
+        console.log("Токен отсутствует. redirect...");
+      }
+      // Устанавливаем флаг состояния в false, когда проверка завершена
+      setIsLoading(false);
+    }, [token, navigate]);
+
+    // Если isLoading равен true, показываем загрузочный индикатор, иначе отображаем компонент
+    return isLoading ? <div>Loading...</div> : <Component {...props} />;
+  };
+}
+
+export default withAuth;

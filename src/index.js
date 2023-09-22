@@ -1,17 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import { createContext } from "react";
+import ReactDOM from "react-dom"; // Измените импорт на react-dom
+import App from "./App";
+import UserStore from "./store/userStore"; // Обновите импорт
+import PostStore from "./store/postStore";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+export const RootStoreContext = createContext();
+const root = document.getElementById("root");
+const userStoreInstance = new UserStore(); // Переименуйте переменную
+const postStoreInstance = new PostStore();
+const stores = {
+  userStore: userStoreInstance,
+  postStore: postStoreInstance,
+};
+
+ReactDOM.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <RootStoreContext.Provider value={stores}>
+      <App />
+    </RootStoreContext.Provider>
+  </React.StrictMode>,
+  root
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
