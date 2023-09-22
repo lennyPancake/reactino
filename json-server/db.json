@@ -3,20 +3,23 @@
     {
       "id": 1,
       "title": "Заголовок поста 1",
-      "content": "Содержание поста 1",
-      "authorId": 1
+      "content": "Содержание поста 1Содержание поста 1Содержание поста 1Содержание поста 1Содержание поста 1",
+      "authorId": 1,
+      "image": "http://localhost:8000/images/night.jpg"
     },
     {
       "id": 2,
       "title": "Заголовок поста 2",
       "content": "Содержание поста 2",
-      "authorId": 1
+      "authorId": 1,
+      "image": "http://localhost:8000/images/night.jpg"
     },
     {
       "id": 3,
       "title": "Заголовок поста 3",
       "content": "Содержание поста 3",
-      "authorId": 2
+      "authorId": 2,
+      "image": "http://localhost:8000/images/night.jpg"
     }
   ],
   "comments": [
@@ -39,119 +42,24 @@
       "first_name": "lenny",
       "last_name": "brown",
       "email": "user1@example.com",
-      "password": "password1"
+      "password": "password1",
+      "avatar": "http://localhost:8000/images/ava1.png"
     },
     {
       "id": 2,
-      "first_name": "lenny",
-      "last_name": "brown",
+      "first_name": "Martin",
+      "last_name": "Cool",
       "email": "user2@example.com",
-      "password": "password2"
+      "password": "password2",
+      "avatar": "http://localhost:8000/images/ava2.jpg"
     },
     {
       "id": 3,
-      "first_name": "lenny",
-      "last_name": "brown",
+      "first_name": "Son",
+      "last_name": "Apolni",
       "email": "user3@example.com",
-      "password": "password3"
-    },
-    {
-      "id": 4,
-      "first_name": "lenny",
-      "last_name": "brown",
-      "email": "user4@example.com",
-      "password": "password4"
-    },
-    {
-      "id": 5,
-      "email": "mnogolet@mail.ru",
-      "password": "qwerty",
-      "first_name": "Паша",
-      "last_name": "Ширяев"
-    },
-    {
-      "id": 6,
-      "email": "mnogolet2@mail.ru",
-      "password": "qwerty",
-      "first_name": "Паша",
-      "last_name": "Ширяев"
-    },
-    {
-      "id": 7,
-      "email": "markon422.turneres@gmail.com",
-      "password": "qwerty",
-      "first_name": "КРот",
-      "last_name": "Шпротов"
-    },
-    {
-      "id": 8,
-      "email": "pasha.krut2015@mail.ru",
-      "password": "qwerty",
-      "first_name": "Пав",
-      "last_name": "Шарки"
-    },
-    {
-      "id": 9,
-      "email": "charleson269.mitchelles@gmail.com",
-      "password": "qwerty",
-      "first_name": "Charleson",
-      "last_name": "Mitchelles"
-    },
-    {
-      "id": 10,
-      "email": "3222.turneres@gmail.com",
-      "password": "qwerty",
-      "first_name": "markon",
-      "last_name": "qweryy"
-    },
-    {
-      "id": 11,
-      "email": "charle32son269.mitchelles@gmail.com",
-      "password": "qwerty",
-      "first_name": "Paoe",
-      "last_name": "elwledw"
-    },
-    {
-      "id": 12,
-      "email": "pasha.kru323t1@mail.ru",
-      "password": "qwerty",
-      "first_name": "Pasha",
-      "last_name": "elwflewl"
-    },
-    {
-      "id": 13,
-      "email": "pasha.k3232rut2015@mail.ru",
-      "password": "23232",
-      "first_name": "32323",
-      "last_name": "2323"
-    },
-    {
-      "id": 14,
-      "email": "markon13222.turneres@gmail.com",
-      "password": "13123",
-      "first_name": "123",
-      "last_name": "123"
-    },
-    {
-      "id": 15,
-      "email": "pa132ha.krut2015@mail.ru",
-      "password": "123",
-      "first_name": "123",
-      "last_name": "123"
-    },
-    {
-      "id": 16,
-      "email": "charl123eson269.mitchelles@gmail.com",
-      "password": "123",
-      "first_name": "123",
-      "last_name": "123"
-    },
-    {
-      "id": 17,
-      "email": "pasha.kru232t1@mail.ru",
-      "password": "1234",
-      "first_name": "123",
-      "last_name": "123"
+      "password": "password3",
+      "avatar": "http://localhost:8000/images/ava1.png"
     }
   ]
 }

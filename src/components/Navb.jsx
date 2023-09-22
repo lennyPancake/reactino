@@ -12,12 +12,13 @@ const Navb = () => {
         position: "fixed",
         paddingTop: "50px",
       }}
-      defaultActiveKey="/home"
+      defaultActiveKey="active"
       className={classes.nav}
     >
       <Nav.Link
         className={classes.link}
         to={`/users/${JSON.parse(sessionStorage.getItem("mainUser")).id}`}
+        eventKey="active"
       >
         Мой блог
       </Nav.Link>

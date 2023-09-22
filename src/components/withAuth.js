@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+import { Spinner } from "react-bootstrap";
 
 function withAuth(Component) {
   return function AuthenticatedComponent(props) {
@@ -21,12 +22,17 @@ function withAuth(Component) {
         navigate("/login");
         console.log("Токен отсутствует. redirect...");
       }
-      // Устанавливаем флаг состояния в false, когда проверка завершена
+
       setIsLoading(false);
     }, [token, navigate]);
 
-    // Если isLoading равен true, показываем загрузочный индикатор, иначе отображаем компонент
-    return isLoading ? <div>Loading...</div> : <Component {...props} />;
+    return isLoading ? (
+      <Spinner animation="border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
+    ) : (
+      <Component {...props} />
+    );
   };
 }
 

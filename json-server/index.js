@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 const staticFolder = path.join(path.resolve(__dirname, "static"));
-const jwtSecretKey = "pargaks";
+const jwtSecretKey = "pagan";
 const server = jsonServer.create();
 const router = jsonServer.router(path.resolve(__dirname, "db.json"));
 server.use(jsonServer.defaults({ static: staticFolder }));
@@ -22,7 +22,7 @@ server.use(jsonServer.bodyParser);
 
 function generateToken(user) {
   const token = jwt.sign({ userId: user.id }, jwtSecretKey, {
-    expiresIn: "1h",
+    expiresIn: "3h",
   });
   return token;
 }

@@ -16,7 +16,7 @@ const MainPage = () => {
   );
   console.log("userMain");
   return (
-    <div style={{ display: "flex", height: "766px", background: "#212529" }}>
+    <div style={{ display: "flex", height: "auto", background: "#212529" }}>
       <Navb />
       <PostsList />
       {/* <div style={{ marginTop: "150px" }}>

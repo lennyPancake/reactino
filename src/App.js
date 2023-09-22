@@ -1,11 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "./components/Login";
-import Login from "./components/Login";
+import "./App.css";
+import "./pages/Login";
+import Login from "./pages/Login";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Registration from "./components/Registration";
 import MainPage from "./pages/MainPage";
-import PostsList from "./components/PostsList";
-import userStore from "./store/userStore";
 import { RootStoreContext } from "./index";
 import { useContext } from "react";
 function App() {

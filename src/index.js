@@ -1,12 +1,13 @@
 import React from "react";
+import "./index.css";
 import { createContext } from "react";
-import ReactDOM from "react-dom"; // Измените импорт на react-dom
+import ReactDOM from "react-dom/client"; // Измените импорт на react-dom
 import App from "./App";
 import UserStore from "./store/userStore"; // Обновите импорт
 import PostStore from "./store/postStore";
 
 export const RootStoreContext = createContext();
-const root = document.getElementById("root");
+const root = ReactDOM.createRoot(document.getElementById("root"));
 const userStoreInstance = new UserStore(); // Переименуйте переменную
 const postStoreInstance = new PostStore();
 const stores = {
@@ -14,7 +15,7 @@ const stores = {
   postStore: postStoreInstance,
 };
 
-ReactDOM.render(
+root.render(
   <React.StrictMode>
     <RootStoreContext.Provider value={stores}>
       <App />
