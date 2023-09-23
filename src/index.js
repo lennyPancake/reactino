@@ -5,14 +5,17 @@ import ReactDOM from "react-dom/client"; // Измените импорт на r
 import App from "./App";
 import UserStore from "./store/userStore"; // Обновите импорт
 import PostStore from "./store/postStore";
+import CommentStore from "./store/commentStore";
 
 export const RootStoreContext = createContext();
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const userStoreInstance = new UserStore(); // Переименуйте переменную
 const postStoreInstance = new PostStore();
+const commentStoreInstance = new CommentStore();
 const stores = {
   userStore: userStoreInstance,
   postStore: postStoreInstance,
+  commentStore: commentStoreInstance,
 };
 
 root.render(

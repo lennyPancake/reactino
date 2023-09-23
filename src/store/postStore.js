@@ -3,6 +3,7 @@ import { makeAutoObservable } from "mobx";
 
 class PostStore {
   posts = [];
+  comments = [];
   constructor() {
     makeAutoObservable(this);
   }

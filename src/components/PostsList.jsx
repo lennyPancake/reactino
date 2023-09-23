@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import MainUser from "./MainUser";
 import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
-
+import { Link } from "react-router-dom";
 const PostsList = observer(({ userPosts }) => {
   //?
   const { userStore, postStore } = useContext(RootStoreContext);
@@ -57,7 +57,9 @@ const PostsList = observer(({ userPosts }) => {
             <Card.Body>
               <Card.Title>{post.title}</Card.Title>
               <Card.Text>{post.content}</Card.Text>
-              <Button variant="outline-light">Подробнее...</Button>
+              <Link to={`/posts/${post.id}`}>
+                <Button variant="outline-light">Подробнее...</Button>
+              </Link>
             </Card.Body>
           </Card>
         );

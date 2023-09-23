@@ -9,6 +9,7 @@ import { RootStoreContext } from "./index";
 import { useContext } from "react";
 import Navbb from "./components/Navbb";
 import AllPosts from "./pages/AllPosts";
+import Post from "./pages/Post";
 function App() {
   const { userStore } = useContext(RootStoreContext);
   userStore.fetchUsers();
