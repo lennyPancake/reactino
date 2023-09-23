@@ -1,26 +1,17 @@
-import React, { useContext } from "react";
-import { observer } from "mobx-react-lite";
-import { RootStoreContext } from "..";
-import { Card } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import MainUser from "./MainUser";
-import Col from "react-bootstrap/Col";
-import Image from "react-bootstrap/Image";
-
-const PostsList = observer(({ userPosts }) => {
-  //?
-  const { userStore, postStore } = useContext(RootStoreContext);
-
-  return (
-    <div style={{ marginLeft: "310px" }}>
-      {postStore.posts.map((post) => {
-        const author = userStore.users.find(
-          (user) => user.id === post.authorId
-        );
-
-        return (
-          <Card
-            key={post.id}
+import React from 'react'
+import Navb from '../components/Navb'
+import { RootStoreContext } from '..';
+import { useContext } from 'react';
+const Post = () => {
+    const { id } = useParams();
+    const {postStore} = useContext(RootStoreContext)
+    const author = userStore.users.find(
+       ???  
+      );
+    return (
+    <div>
+      <Navb/>
+      <Card
             style={{
               color: "white",
               backgroundColor: "#3f4653",
@@ -60,10 +51,8 @@ const PostsList = observer(({ userPosts }) => {
               <Button variant="outline-light">Подробнее...</Button>
             </Card.Body>
           </Card>
-        );
-      })}
     </div>
-  );
-});
+  )
+}
 
-export default PostsList;
+export default Post

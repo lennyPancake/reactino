@@ -7,6 +7,8 @@ import Registration from "./components/Registration";
 import MainPage from "./pages/MainPage";
 import { RootStoreContext } from "./index";
 import { useContext } from "react";
+import Navbb from "./components/Navbb";
+import AllPosts from "./pages/AllPosts";
 function App() {
   const { userStore } = useContext(RootStoreContext);
   userStore.fetchUsers();
@@ -17,6 +19,9 @@ function App() {
           <Route path="/register" element={<Registration />} />
           <Route path="/login" element={<Login />} />
           <Route path="/users/:id" element={<MainPage />} />
+          <Route path="/posts/" element={<AllPosts />} />
+          <Route path="/test/" element={<Navbb />} />
+          <Route path="/posts/:id" element={<Post />} />
         </Routes>
       </BrowserRouter>
     </>

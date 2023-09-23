@@ -20,6 +20,5 @@ root.render(
     <RootStoreContext.Provider value={stores}>
       <App />
     </RootStoreContext.Provider>
-  </React.StrictMode>,
-  root
+  </React.StrictMode>
 );

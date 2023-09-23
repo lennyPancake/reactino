@@ -3,9 +3,21 @@ import { makeAutoObservable } from "mobx";
 
 class PostStore {
   posts = [];
-  userPosts = [];
   constructor() {
     makeAutoObservable(this);
+  }
+  async getPosts() {
+    try {
+      const response = await axios.get(`http://localhost:8000/posts`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      });
+      this.posts = response.data;
+      console.log("posts", response.data);
+    } catch (error) {
+      console.error("Ошибка при получении постов:", error);
+    }
   }
   async getPostsFromUserId(userId) {
     try {
@@ -17,7 +29,7 @@ class PostStore {
           },
         }
       );
-      this.userPosts = response.data;
+      this.posts = response.data;
       console.log("posts", response.data);
     } catch (error) {
       console.error("Ошибка при получении постов:", error);
