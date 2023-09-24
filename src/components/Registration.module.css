@@ -1,55 +1,6 @@
-/* RegistrationForm.css */
-
-/* Стили для контейнера формы */
-.registration_container {
-  width: 300px;
-  margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  background-color: #fff;
+div {
+  margin-top: 15px;
 }
-
-/* Стили для заголовка формы */
-.registration_title {
-  font-size: 24px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-/* Стили для полей ввода и меток */
-.registration_field {
-  margin-bottom: 15px;
-}
-
-/* Стили для метки */
-.registration-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-/* Стили для полей ввода */
-.registration-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-/* Стили для кнопки отправки */
-.registration_button {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.registration-button:hover {
-  background-color: #0056b3;
+Form {
+  background-color: #212529;
 }

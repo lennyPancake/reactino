@@ -1,15 +1,14 @@
 /* Login.css */
 .login-container {
-  background-color: #212529;
   color: #e9eef7;
   padding: 20px;
   border-radius: 5px;
   margin-top: 50px;
   width: 250px;
 }
-.body {
-  background-color: #212529;
-}
 .login-title {
   text-align: center;
+}
+.reg {
+  margin-top: 40px;
 }

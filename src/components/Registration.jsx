@@ -2,7 +2,7 @@ import MainUser from "./MainUser";
 import { React, useState } from "react";
 import axios from "axios";
 import withAuth from "./withAuth";
-import classes from "./Registration.module.css";
+import "./Registration.module.css";
 import { useContext } from "react";
 import { RootStoreContext } from "..";
 import { useNavigate } from "react-router-dom";
@@ -69,50 +69,79 @@ const Registration = () => {
   return (
     <Container className="d-flex justify-content-center align-items-center">
       <Form
-        className="bg-primary bg-opacity-10 p-4 mt-5 rounded"
+        className="bg-black bg-opacity-10 p-4 mt-5 rounded"
         style={{ width: "50%", minWidth: "500px " }}
         onSubmit={handleSubmit}
       >
         <h2>Регистрация</h2>
-        <Form.Control
-          type="text"
-          name="first_name"
-          value={userData.first_name}
-          onChange={handleInputChange}
-          className="mt-3"
-          placeholder="Имя ..."
-        />
-        <Form.Control
-          type="text"
-          name="last_name"
-          value={userData.last_name}
-          onChange={handleInputChange}
-          className="mt-3"
-          placeholder="Фамилия ..."
-        />
-        <Form.Control
-          type="text"
-          name="email"
-          value={userData.email}
-          onChange={handleInputChange}
-          className="mt-3"
-          placeholder="email ..."
-        />
-        <Form.Control
-          type="password"
-          name="password"
-          value={userData.password}
-          onChange={handleInputChange}
-          className="mt-3"
-          placeholder="Password..."
-        />
-
-        <Form.Control
-          type="file"
-          name="avatar"
-          onChange={handleAvatarChange}
-          className="mt-3"
-        />
+        <div>
+          Имя:
+          <Form.Control
+            type="text"
+            name="first_name"
+            value={userData.first_name}
+            onChange={handleInputChange}
+            className="mt-3"
+            placeholder="Имя"
+          />
+        </div>
+        <div>
+          Фамилия:
+          <Form.Control
+            type="text"
+            name="last_name"
+            value={userData.last_name}
+            onChange={handleInputChange}
+            className="mt-3"
+            placeholder="Фамилия"
+          />
+        </div>
+        <div>
+          {" "}
+          Email:
+          <Form.Control
+            type="text"
+            name="email"
+            value={userData.email}
+            onChange={handleInputChange}
+            className="mt-3"
+            placeholder="email"
+          />
+        </div>
+        <div>
+          Пароль:
+          <Form.Control
+            type="password"
+            name="password"
+            value={userData.password}
+            onChange={handleInputChange}
+            className="mt-3"
+            placeholder="Password"
+          />
+        </div>
+        <div>
+          Повторите пароль:
+          <Form.Control
+            type="password"
+            name="password"
+            value={userData.password}
+            onChange={handleInputChange}
+            className="mt-3"
+            placeholder="Password"
+          />
+        </div>
+        <div>
+          Аватар:
+          <Form.Control
+            type="file"
+            name="avatar"
+            onChange={handleAvatarChange}
+            className="mt-3"
+          />
+        </div>
+        <div>
+          Уже зарегистрированы? <a href="/login">Войти</a>
+        </div>
         <div className="d-flex justify-content-end align-items-start mt-3">
           <Button variant="success" className="mt-1" type="submit">
             {" "}
@@ -124,4 +153,4 @@ const Registration = () => {
   );
 };
 
-export default withAuth(Registration);
+export default Registration;

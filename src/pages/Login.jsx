@@ -33,9 +33,12 @@ const Login = () => {
   };
 
   return (
-    <Container style={{ width: "35%" }} className="login-container">
+    <Container
+      style={{ width: "35%" }}
+      className="bg-black bg-opacity-10 login-container"
+    >
       <h2 className="login-title">Вход</h2>
-      <Form>
+      <Form className="bg-black bg-opacity-10">
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Email</Form.Label>
           <Form.Control
@@ -45,7 +48,6 @@ const Login = () => {
             onChange={(event) => setLogin(event.target.value)}
           />
         </Form.Group>
-
         <Form.Group controlId="formBasicPassword">
           <Form.Label>Пароль</Form.Label>
           <Form.Control
@@ -55,6 +57,11 @@ const Login = () => {
             onChange={(event) => setPass(event.target.value)}
           />
         </Form.Group>
+
+        <div className="reg">
+          <a href="/register">Зарегистрироваться</a>
+        </div>
+
         <div className="d-flex justify-content-end">
           <Button
             className="me-10 mt-5 "

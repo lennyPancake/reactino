@@ -7,8 +7,6 @@ class CommentStore {
   constructor() {
     makeAutoObservable(this);
   }
-
-  // Метод для получения комментариев по идентификатору поста
   async getCommentsForPost(postId) {
     try {
       const response = await axios.get(
