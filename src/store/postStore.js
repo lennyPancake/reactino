@@ -3,9 +3,22 @@ import { makeAutoObservable } from "mobx";
 
 class PostStore {
   posts = [];
-  comments = [];
+  post = {};
   constructor() {
     makeAutoObservable(this);
+  }
+  async getPost(id) {
+    try {
+      const response = await axios.get(`http://localhost:8000/posts/${id}`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      });
+      this.post = response.data;
+      console.log("post - ", response.data);
+    } catch (error) {
+      console.error("Ошибка при получении поста:", error);
+    }
   }
   async getPosts() {
     try {

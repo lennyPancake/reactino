@@ -6,10 +6,10 @@ const multer = require("multer");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "static/uploads"));
+    cb(null, path.join(__dirname, "static/images"));
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + " - " + file.originalname);
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 const upload = multer({ storage });
@@ -35,7 +35,9 @@ server.use(async (req, res, next) => {
 });
 
 server.post("/file", upload.single("file"), function (req, res) {
-  res.json({ filepath: `/uploads/${req.file.filename}` });
+  res.json({
+    filepath: `http://localhost:8000/images/${req.file.filename}`,
+  });
 });
 
 // Эндпоинт для логина
@@ -67,7 +69,7 @@ server.post("/login", (req, res) => {
 // Эндпоинт для регистрации новых пользователей
 server.post("/register", (req, res) => {
   try {
-    const { email, password, first_name, last_name } = req.body;
+    const { email, password, first_name, last_name, avatar } = req.body;
     const db = JSON.parse(
       fs.readFileSync(path.resolve(__dirname, "db.json"), "UTF-8")
     );
@@ -81,15 +83,15 @@ server.post("/register", (req, res) => {
     }
 
     // Генерируем уникальный ID для нового пользователя (просто для примера, в реальном приложении используйте UUID или другой метод)
-    const newUserId = users.length + 1;
-
+    const id = Date.now();
     // Создаем нового пользователя
     const newUser = {
-      id: newUserId,
+      id,
       email,
       password,
       first_name,
       last_name,
+      avatar,
     };
 
     // Добавляем пользователя в базу данных
@@ -135,6 +137,43 @@ server.use((req, res, next) => {
     next();
   });
 });
+server.post("/comments", (req, res) => {
+  try {
+    const { text, authorId, postId } = req.body;
+    const db = JSON.parse(
+      fs.readFileSync(path.resolve(__dirname, "db.json"), "UTF-8")
+    );
+    const { comments = [] } = db;
+
+    // Генерируем уникальный ID для нового комментария (просто для примера, в реальном приложении используйте UUID или другой метод)
+    const newCommentId = comments.length + 1;
+
+    // Создаем новый комментарий
+    const newComment = {
+      id: newCommentId,
+      text,
+      authorId,
+      postId,
+    };
+
+    // Добавляем комментарий в базу данных
+    comments.push(newComment);
+
+    // Обновляем базу данных
+    fs.writeFileSync(
+      path.resolve(__dirname, "db.json"),
+      JSON.stringify(db, null, 2),
+      "UTF-8"
+    );
+
+    // Отправляем успешный ответ
+    return res.json(newComment);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: e.message });
+  }
+});
+
 server.use(router);
 
 // запуск сервера

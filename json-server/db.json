@@ -34,6 +34,12 @@
       "text": "Комментарий от пользователя 3",
       "authorId": 3,
       "postId": 1
+    },
+    {
+      "id": 3,
+      "text": "Как дела?\n",
+      "authorId": 1695554892917,
+      "postId": "2"
     }
   ],
   "users": [
@@ -60,6 +66,14 @@
       "email": "user3@example.com",
       "password": "password3",
       "avatar": "http://localhost:8000/images/ava1.png"
+    },
+    {
+      "id": 1695554892917,
+      "email": "123",
+      "password": "123",
+      "first_name": "123",
+      "last_name": "123",
+      "avatar": "http://localhost:8000/images/1695554882615-Image20230330111449.jpg"
     }
   ]
 }

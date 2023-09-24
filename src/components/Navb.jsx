@@ -5,7 +5,12 @@ import classes from "./Navb.module.css";
 import MainUser from "./MainUser";
 import { NavLink } from "react-router-dom";
 import { Navbar } from "react-bootstrap";
+import "./Navbb.css";
 const Navb = () => {
+  let id = 1;
+  if (sessionStorage.getItem("mainUser")) {
+    id = JSON.parse(sessionStorage.getItem("mainUser")).id;
+  }
   return (
     <div
       style={{
@@ -29,10 +34,7 @@ const Navb = () => {
       <br />
       <Navbar className="bg-212529">
         <Container className="bg-212529">
-          <Navbar.Brand
-            className="bg-212529 mx-auto"
-            href={`/users/${JSON.parse(sessionStorage.getItem("mainUser")).id}`}
-          >
+          <Navbar.Brand className="bg-212529 mx-auto" href={`/users/${id}`}>
             Мой блог
           </Navbar.Brand>
         </Container>

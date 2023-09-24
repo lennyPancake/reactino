@@ -6,7 +6,8 @@ import classes from "./Registration.module.css";
 import { useContext } from "react";
 import { RootStoreContext } from "..";
 import { useNavigate } from "react-router-dom";
-import userEvent from "@testing-library/user-event";
+import { Container, Form, Button } from "react-bootstrap";
+
 const Registration = () => {
   const { userStore } = useContext(RootStoreContext);
   const navigate = useNavigate();
@@ -15,7 +16,30 @@ const Registration = () => {
     password: "",
     first_name: "",
     last_name: "",
+    avatar: "",
   });
+  const handleAvatarChange = (event) => {
+    const file = event.target.files[0];
+
+    // Создаем объект FormData
+    const formData = new FormData();
+    formData.append("file", file);
+
+    // Отправляем файл на сервер
+    axios
+      .post("http://localhost:8000/file", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Указываем тип контента как multipart/form-data
+        },
+      })
+      .then((response) => {
+        console.log("Загрузка прошла успешно", response.data);
+        userData.avatar = response.data.filepath;
+      })
+      .catch((error) => {
+        console.error("Ошибка при загрузке", error);
+      });
+  };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -24,7 +48,6 @@ const Registration = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     // Отправляем данные на сервер
     axios
       .post("http://localhost:8000/register", userData)
@@ -44,55 +67,60 @@ const Registration = () => {
   };
 
   return (
-    <div className={classes.registration_container}>
-      <MainUser />
-      <h2 className={classes.registration_title}>Форма регистрации</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={userData.email}
-            onChange={handleInputChange}
-            required
-          />
+    <Container className="d-flex justify-content-center align-items-center">
+      <Form
+        className="bg-primary bg-opacity-10 p-4 mt-5 rounded"
+        style={{ width: "50%", minWidth: "500px " }}
+        onSubmit={handleSubmit}
+      >
+        <h2>Регистрация</h2>
+        <Form.Control
+          type="text"
+          name="first_name"
+          value={userData.first_name}
+          onChange={handleInputChange}
+          className="mt-3"
+          placeholder="Имя ..."
+        />
+        <Form.Control
+          type="text"
+          name="last_name"
+          value={userData.last_name}
+          onChange={handleInputChange}
+          className="mt-3"
+          placeholder="Фамилия ..."
+        />
+        <Form.Control
+          type="text"
+          name="email"
+          value={userData.email}
+          onChange={handleInputChange}
+          className="mt-3"
+          placeholder="email ..."
+        />
+        <Form.Control
+          type="password"
+          name="password"
+          value={userData.password}
+          onChange={handleInputChange}
+          className="mt-3"
+          placeholder="Password..."
+        />
+
+        <Form.Control
+          type="file"
+          name="avatar"
+          onChange={handleAvatarChange}
+          className="mt-3"
+        />
+        <div className="d-flex justify-content-end align-items-start mt-3">
+          <Button variant="success" className="mt-1" type="submit">
+            {" "}
+            Зарегистрироваться
+          </Button>
         </div>
-        <div>
-          <label>Пароль:</label>
-          <input
-            type="password"
-            name="password"
-            value={userData.password}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Имя:</label>
-          <input
-            type="text"
-            name="first_name"
-            value={userData.first_name}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Фамилия:</label>
-          <input
-            type="text"
-            name="last_name"
-            value={userData.last_name}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <button className={classes.registration_button} type="submit">
-          Зарегистрироваться
-        </button>
-      </form>
-    </div>
+      </Form>
+    </Container>
   );
 };
 

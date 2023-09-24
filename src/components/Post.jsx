@@ -7,24 +7,27 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
 import { Link } from "react-router-dom";
+import AddComment from "./AddComment";
+import Navb from "./Navb";
 
-const Post = observer(() => {
-  const { id } = useParams(); // Получаем id поста из параметров маршрута
+const Post = observer((props) => {
   const { userStore, postStore, commentStore } = useContext(RootStoreContext);
-
   // Получаем информацию о посте по его id
-  const post = postStore.posts.find((post) => post.id === parseInt(id));
-
+  const { postId } = props;
   useEffect(() => {
-    // Загрузка комментариев для данного поста
-    commentStore.getCommentsForPost(id);
-  }, [id, commentStore]);
+    // Загрузка поста
+    postStore.getPost(postId);
 
+    // Загрузка комментариев для данного поста
+    commentStore.getCommentsForPost(postId);
+  }, [postId, postStore, commentStore]);
+
+  const post = postStore.post;
   if (!post) {
     return <div>Loading...</div>;
   }
 
-  const author = userStore.users.find((user) => user.id === id);
+  const author = userStore.users.find((user) => user.id === post.authorId);
 
   return (
     <div style={{ marginLeft: "310px" }}>
@@ -94,16 +97,26 @@ const Post = observer(() => {
                     height: "30px",
                     marginRight: "10px",
                   }}
-                  src={userStore.posts}
+                  src={
+                    userStore.users.find((user) => user.id === comment.authorId)
+                      .avatar
+                  }
                   roundedCircle
                 />
               </Col>
               <div>
-                {comment.user.first_name} {comment.user.last_name}
+                {
+                  userStore.users.find((user) => user.id === comment.authorId)
+                    .first_name
+                }{" "}
+                {
+                  userStore.users.find((user) => user.id === comment.authorId)
+                    .last_name
+                }
               </div>
             </Card.Header>
             <Card.Body>
-              <Card.Text>{comment.text}</Card.Text>
+              <Card.Text style={{ color: "white" }}>{comment.text}</Card.Text>
             </Card.Body>
           </Card>
         ))}
