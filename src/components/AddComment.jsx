@@ -29,11 +29,12 @@ const AddComment = observer(({ postId }) => {
   };
 
   return (
-    <div style={{ marginLeft: "310px" }}>
+    <div>
       <h4>Добавить комментарий</h4>
-      <Form onSubmit={handleAddComment}>
+      <Form style={{ width: "40%" }} onSubmit={handleAddComment}>
         <Form.Group controlId="commentText">
           <Form.Control
+            className="bg-muted"
             as="textarea"
             rows={3}
             placeholder="Введите комментарий"
@@ -41,7 +42,7 @@ const AddComment = observer(({ postId }) => {
             onChange={(e) => setText(e.target.value)}
           />
         </Form.Group>
-        <Button type="submit" variant="success">
+        <Button className="mt-2" type="submit" variant="success">
           Добавить комментарий
         </Button>
       </Form>

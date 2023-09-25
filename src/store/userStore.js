@@ -18,7 +18,7 @@ class UserStore {
   }
 
   getUser(id) {
-    this.mainUser = this.users.find((user) => user.id === id);
+    return this.users.find((user) => user.id === id);
   }
 
   async fetchUsers() {

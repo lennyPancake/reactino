@@ -14,12 +14,13 @@ const MainPage = () => {
   postStore.getPostsFromUserId(
     JSON.parse(sessionStorage.getItem("mainUser")).id
   );
+  userStore.fetchUsers();
 
   console.log("userMain", postStore.userPosts);
   return (
     <div style={{ display: "flex", height: "auto", background: "#212529" }}>
       <Navb />
-      <PostsList userPosts={postStore.userPosts} />
+      <PostsList />
       {/* <div style={{ marginTop: "150px" }}>
         {userStore.users.map((user) => (
           <div

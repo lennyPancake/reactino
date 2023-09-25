@@ -6,9 +6,11 @@ class CommentStore {
 
   constructor() {
     makeAutoObservable(this);
+    this.isLoading = false;
   }
   async getCommentsForPost(postId) {
     try {
+      this.isLoading = true;
       const response = await axios.get(
         `http://localhost:8000/comments?postId=${postId}`,
         {
@@ -21,6 +23,8 @@ class CommentStore {
       console.log("comments", response.data);
     } catch (error) {
       console.error("Ошибка при получении комментариев:", error);
+    } finally {
+      this.isLoading = false;
     }
   }
 

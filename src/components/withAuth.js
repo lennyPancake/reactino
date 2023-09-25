@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { Spinner } from "react-bootstrap";
+import LoadingSpinner from "./LoadingSpinner";
 
 function withAuth(Component) {
   return function AuthenticatedComponent(props) {
@@ -25,13 +26,7 @@ function withAuth(Component) {
       setIsLoading(false);
     }, [token, navigate]);
 
-    return isLoading ? (
-      <Spinner animation="border" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
-    ) : (
-      <Component {...props} />
-    );
+    return isLoading ? <LoadingSpinner /> : <Component {...props} />;
   };
 }
 

@@ -13,8 +13,6 @@ import Post from "./components/Post";
 import AboutPost from "./pages/AboutPost";
 import UsersList from "./components/UsersList";
 function App() {
-  const { userStore } = useContext(RootStoreContext);
-  userStore.fetchUsers();
   return (
     <>
       <BrowserRouter>

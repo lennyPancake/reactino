@@ -7,7 +7,7 @@ import MainUser from "./MainUser";
 import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
 import { Link } from "react-router-dom";
-const PostsList = observer(({ userPosts }) => {
+const PostsList = observer(() => {
   //?
   const { userStore, postStore } = useContext(RootStoreContext);
 

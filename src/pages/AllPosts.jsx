@@ -4,13 +4,15 @@ import { useContext } from "react";
 import { RootStoreContext } from "..";
 import PostsList from "../components/PostsList";
 import withAuth from "../components/withAuth";
+
 const AllPosts = () => {
-  const { postStore } = useContext(RootStoreContext);
+  const { postStore, userStore } = useContext(RootStoreContext);
   postStore.getPosts();
+  userStore.fetchUsers();
   return (
     <div style={{ display: "flex", height: "auto", background: "#212529" }}>
       <Navb />
-      <PostsList userPosts={postStore.posts} />
+      <PostsList />
     </div>
   );
 };

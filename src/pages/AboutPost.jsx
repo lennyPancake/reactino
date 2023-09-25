@@ -12,7 +12,6 @@ const AboutPost = () => {
     <div>
       <Navb />
       <Post postId={id} />
-      <AddComment postId={id} />
     </div>
   );
 };

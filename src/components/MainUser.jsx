@@ -6,14 +6,12 @@ import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import jwtDecode from "jwt-decode";
-const MainUser = (user) => {
+const MainUser = () => {
   const navigate = useNavigate();
   const { userStore } = useContext(RootStoreContext);
-  const decodedToken = jwtDecode(localStorage.getItem("token"));
-  const mainUserId = decodedToken.userId;
-  console.log("айди пользователя из token'а", mainUserId);
-  userStore.fetchUsers();
-  userStore.getUser(mainUserId);
+
+  userStore.mainUser = JSON.parse(sessionStorage.getItem("mainUser"));
+
   console.log("объект пользователя", userStore.mainUser);
   return (
     <Button
