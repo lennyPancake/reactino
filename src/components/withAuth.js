@@ -7,7 +7,7 @@ function withAuth(Component) {
   return function AuthenticatedComponent(props) {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
-    const [isLoading, setIsLoading] = useState(true); // Флаг состояния загрузки
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
       if (token) {
@@ -22,7 +22,6 @@ function withAuth(Component) {
         navigate("/login");
         console.log("Токен отсутствует. redirect...");
       }
-
       setIsLoading(false);
     }, [token, navigate]);
 

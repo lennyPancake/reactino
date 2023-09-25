@@ -11,6 +11,9 @@ import { Container, Form, Button } from "react-bootstrap";
 const Registration = () => {
   const { userStore } = useContext(RootStoreContext);
   const navigate = useNavigate();
+  const [match, setMatch] = useState(true);
+  const [loaded, setLoaded] = useState(false);
+  const [retryPass, setRetryPass] = useState("");
   const [userData, setUserData] = useState({
     email: "",
     password: "",
@@ -20,20 +23,17 @@ const Registration = () => {
   });
   const handleAvatarChange = (event) => {
     const file = event.target.files[0];
-
-    // Создаем объект FormData
     const formData = new FormData();
     formData.append("file", file);
-
-    // Отправляем файл на сервер
     axios
       .post("http://localhost:8000/file", formData, {
         headers: {
-          "Content-Type": "multipart/form-data", // Указываем тип контента как multipart/form-data
+          "Content-Type": "multipart/form-data",
         },
       })
       .then((response) => {
         console.log("Загрузка прошла успешно", response.data);
+        setLoaded(true);
         userData.avatar = response.data.filepath;
       })
       .catch((error) => {
@@ -69,7 +69,7 @@ const Registration = () => {
   return (
     <Container className="d-flex justify-content-center align-items-center">
       <Form
-        className="bg-black bg-opacity-10 p-4 mt-5 rounded"
+        className="border bg-black bg-opacity-10 p-4 mt-5 rounded"
         style={{ width: "50%", minWidth: "500px " }}
         onSubmit={handleSubmit}
       >
@@ -121,11 +121,19 @@ const Registration = () => {
         </div>
         <div>
           Повторите пароль:
+          {!match ? (
+            <div style={{ color: "red" }}>Пароли не совпадают</div>
+          ) : (
+            ""
+          )}
           <Form.Control
             type="password"
-            name="password"
-            value={userData.password}
-            onChange={handleInputChange}
+            name="passwordRepeat"
+            value={retryPass}
+            onChange={(event) => {
+              setRetryPass(event.target.value);
+              setMatch(event.target.value === userData.password);
+            }}
             className="mt-3"
             placeholder="Password"
           />
@@ -138,6 +146,11 @@ const Registration = () => {
             onChange={handleAvatarChange}
             className="mt-3"
           />
+          {loaded ? (
+            <div style={{ color: "green" }}>Изображение успешно загружено</div>
+          ) : (
+            ""
+          )}
         </div>
         <div>
           Уже зарегистрированы? <a href="/login">Войти</a>

@@ -3,7 +3,7 @@ import Navb from "../components/Navb";
 import { useContext } from "react";
 import { RootStoreContext } from "..";
 import PostsList from "../components/PostsList";
-
+import withAuth from "../components/withAuth";
 const AllPosts = () => {
   const { postStore } = useContext(RootStoreContext);
   postStore.getPosts();
@@ -15,4 +15,4 @@ const AllPosts = () => {
   );
 };
 
-export default AllPosts;
+export default withAuth(AllPosts);

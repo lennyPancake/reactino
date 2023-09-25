@@ -40,6 +40,12 @@
       "text": "Как дела?\n",
       "authorId": 1695554892917,
       "postId": "2"
+    },
+    {
+      "id": 4,
+      "text": "qqq",
+      "authorId": 2,
+      "postId": "3"
     }
   ],
   "users": [

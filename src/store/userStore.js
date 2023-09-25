@@ -18,8 +18,7 @@ class UserStore {
   }
 
   getUser(id) {
-    console.log("users:", this.users[0]);
-    return this.users.find((user) => user.id === id); // Fix the comparison
+    this.mainUser = this.users.find((user) => user.id === id);
   }
 
   async fetchUsers() {

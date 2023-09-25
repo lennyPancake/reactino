@@ -1,17 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useContext } from "react";
 import { RootStoreContext } from "..";
 import { Col } from "react-bootstrap";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 const MainUser = (user) => {
   const navigate = useNavigate();
   const { userStore } = useContext(RootStoreContext);
-  const storedMainUser = sessionStorage.getItem("mainUser"); //delete
-  if (storedMainUser) {
-    userStore.mainUser = JSON.parse(storedMainUser);
-  }
+  const decodedToken = jwtDecode(localStorage.getItem("token"));
+  const mainUserId = decodedToken.userId;
+  console.log("айди пользователя из token'а", mainUserId);
+  userStore.fetchUsers();
+  userStore.getUser(mainUserId);
+  console.log("объект пользователя", userStore.mainUser);
   return (
     <Button
       onClick={() => {

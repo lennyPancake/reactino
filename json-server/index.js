@@ -118,18 +118,16 @@ server.use((req, res, next) => {
     return next();
   }
 
-  // для всех остальных маршрутов запрещаем
-  // Получаем токен из заголовка Authorization
   const token = req.headers.authorization;
 
   if (!token) {
-    //return res.status(403).json({ message: "AUTH ERROR" });
+    return res.status(403).json({ message: "AUTH ERROR" });
   }
 
   // Проверяем токен
   jwt.verify(token, jwtSecretKey, (err, decoded) => {
     if (err) {
-      //return res.status(403).json({ message: "Invalid token" });
+      return res.status(403).json({ message: "Invalid token" });
     }
 
     // Если токен валиден, добавляем информацию о пользователе в объект запроса

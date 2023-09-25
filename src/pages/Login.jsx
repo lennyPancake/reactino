@@ -35,10 +35,10 @@ const Login = () => {
   return (
     <Container
       style={{ width: "35%" }}
-      className="bg-black bg-opacity-10 login-container"
+      className="border bg-dark login-container"
     >
-      <h2 className="login-title">Вход</h2>
-      <Form className="bg-black bg-opacity-10">
+      <Form className="bg-dark">
+        <h2 className="login-title">Вход</h2>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Email</Form.Label>
           <Form.Control
