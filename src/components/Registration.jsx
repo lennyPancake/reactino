@@ -53,7 +53,9 @@ const Registration = () => {
       .post("http://localhost:8000/register", userData)
       .then((response) => {
         console.log("Регистрация прошла успешно", response.data);
-        userStore.mainUser = response.data.user;
+        const { user, token } = response.data;
+        localStorage.setItem("token", token);
+        userStore.mainUser = user;
         console.log(
           "Айди зарегистрированного пользователя: ",
           userStore.mainUser.id

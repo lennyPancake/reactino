@@ -22,7 +22,9 @@ const Login = () => {
         // обработка успешного запроса
         const { user, token } = response.data;
         localStorage.setItem("token", token);
+
         userStore.mainUser = user;
+        sessionStorage.setItem("mainUser", JSON.stringify(userStore.mainUser));
         navigate("/users/" + user.id);
       })
       .catch(function (error) {

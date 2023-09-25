@@ -27,7 +27,6 @@ const MainUser = () => {
         marginLeft: "20px",
         position: "fixed",
         color: "white",
-        //boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)", // Добавление тени
       }}
     >
       <Col xs={6} md={4} style={{ width: "auto" }}>
