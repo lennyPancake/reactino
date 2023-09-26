@@ -111,6 +111,43 @@ server.post("/register", (req, res) => {
     return res.status(500).json({ message: e.message });
   }
 });
+server.post("/posts", (req, res) => {
+  try {
+    const { title, content, authorId, image } = req.body;
+    const db = JSON.parse(
+      fs.readFileSync(path.resolve(__dirname, "db.json"), "UTF-8")
+    );
+    const { posts = [] } = db;
+
+    // Генерируем уникальный ID для нового поста (просто для примера, в реальном приложении используйте UUID или другой метод)
+    const newPostId = posts.length + 1;
+    const id = Date.now();
+    // Создаем новый пост
+    const newPost = {
+      id,
+      title,
+      content,
+      authorId,
+      image,
+    };
+
+    // Добавляем пост в базу данных
+    posts.push(newPost);
+
+    // Обновляем базу данных
+    fs.writeFileSync(
+      path.resolve(__dirname, "db.json"),
+      JSON.stringify(db, null, 2),
+      "UTF-8"
+    );
+
+    // Отправляем успешный ответ
+    return res.json(newPost);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: e.message });
+  }
+});
 // проверяем, авторизован ли пользователь
 server.use((req, res, next) => {
   // разрешаем публичный доступ без авторизации
@@ -171,7 +208,85 @@ server.post("/comments", (req, res) => {
     return res.status(500).json({ message: e.message });
   }
 });
+server.delete("/posts/:id", (req, res) => {
+  try {
+    const postId = parseInt(req.params.id);
+    const db = JSON.parse(
+      fs.readFileSync(path.resolve(__dirname, "db.json"), "UTF-8")
+    );
+    const { posts = [] } = db;
 
+    // Находим индекс поста, который нужно удалить
+    const postIndex = posts.findIndex((post) => post.id === postId);
+
+    if (postIndex === -1) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // Получаем путь к изображению поста
+    const imagePath = path.join(
+      __dirname,
+      "static",
+      "images",
+      posts[postIndex].image
+    );
+
+    // Удаляем изображение с сервера
+    fs.unlinkSync(imagePath);
+
+    // Удаляем пост из массива
+    posts.splice(postIndex, 1);
+
+    // Обновляем базу данных
+    fs.writeFileSync(
+      path.resolve(__dirname, "db.json"),
+      JSON.stringify(db, null, 2),
+      "UTF-8"
+    );
+
+    // Отправляем успешный ответ
+    return res.status(204).send();
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: e.message });
+  }
+});
+// Эндпоинт для обновления поста
+server.put("/posts/:id", (req, res) => {
+  try {
+    const postId = parseInt(req.params.id);
+    const { title, content, image } = req.body;
+    const db = JSON.parse(
+      fs.readFileSync(path.resolve(__dirname, "db.json"), "UTF-8")
+    );
+    const { posts = [] } = db;
+
+    // Находим индекс поста, который нужно обновить
+    const postIndex = posts.findIndex((post) => post.id === postId);
+
+    if (postIndex === -1) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // Обновляем данные поста
+    posts[postIndex].title = title || posts[postIndex].title;
+    posts[postIndex].content = content || posts[postIndex].content;
+    posts[postIndex].image = image || posts[postIndex].image;
+
+    // Обновляем базу данных
+    fs.writeFileSync(
+      path.resolve(__dirname, "db.json"),
+      JSON.stringify(db, null, 2),
+      "UTF-8"
+    );
+
+    // Отправляем обновленный пост
+    return res.json(posts[postIndex]);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ message: e.message });
+  }
+});
 server.use(router);
 
 // запуск сервера

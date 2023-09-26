@@ -8,18 +8,31 @@ import { RootStoreContext } from "../index";
 import Registration from "../components/Registration";
 import PostsList from "../components/PostsList";
 import MainUser from "../components/MainUser";
+import AddPostModal from "../components/AddPostModal";
 const MainPage = () => {
   const { id } = useParams();
+  let mainUserId = undefined;
   const { userStore, postStore } = useContext(RootStoreContext);
-  postStore.getPostsFromUserId(
-    JSON.parse(sessionStorage.getItem("mainUser")).id
-  );
+  postStore.getPostsFromUserId(id);
   userStore.fetchUsers();
+  if (sessionStorage.getItem("mainUser")) {
+    mainUserId = JSON.parse(sessionStorage.getItem("mainUser")).id;
+  }
 
   console.log("userMain", postStore.userPosts);
+  console.log("mainUserId", mainUserId);
+  console.log("props id ", id);
   return (
-    <div style={{ display: "flex", height: "auto", background: "#212529" }}>
+    <div
+      style={{
+        display: "flex",
+        height: "auto",
+        background: "#212529",
+        flexWrap: "wrap",
+      }}
+    >
       <Navb />
+      {id == mainUserId ? <AddPostModal /> : ""}
       <PostsList />
     </div>
   );

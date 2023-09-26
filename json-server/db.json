@@ -8,13 +8,6 @@
       "image": "http://localhost:8000/images/night.jpg"
     },
     {
-      "id": 2,
-      "title": "Заголовок поста 2",
-      "content": "Содержание поста 2",
-      "authorId": 1,
-      "image": "http://localhost:8000/images/night.jpg"
-    },
-    {
       "id": 3,
       "title": "Заголовок поста 3",
       "content": "Содержание поста 3",

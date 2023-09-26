@@ -4,10 +4,11 @@ import { observer } from "mobx-react-lite";
 import { ListGroup } from "react-bootstrap";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
+import { useNavigate } from "react-router";
 
 const UsersList = observer(() => {
   const { userStore } = useContext(RootStoreContext);
-
+  const navigate = useNavigate();
   useEffect(() => {
     !userStore.isLoading
       ? userStore.fetchUsers()
@@ -28,7 +29,7 @@ const UsersList = observer(() => {
                 src={user.avatar}
                 alt="Аватар"
                 roundedCircle
-                style={{ width: "50px", height: "50px", marginRight: "10px" }}
+                style={{ width: "80px", height: "80px", marginRight: "10px" }}
               />
               <div style={{ width: "30%" }}>
                 <h5>
@@ -43,7 +44,9 @@ const UsersList = observer(() => {
               >
                 <Button
                   variant="primary"
-                  onClick={() => userStore.removeUser(user.id)}
+                  onClick={() => {
+                    navigate(`/users/${user.id}`);
+                  }}
                 >
                   Перейти...
                 </Button>
