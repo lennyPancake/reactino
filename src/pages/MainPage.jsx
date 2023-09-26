@@ -18,10 +18,6 @@ const MainPage = () => {
   if (sessionStorage.getItem("mainUser")) {
     mainUserId = JSON.parse(sessionStorage.getItem("mainUser")).id;
   }
-
-  console.log("userMain", postStore.userPosts);
-  console.log("mainUserId", mainUserId);
-  console.log("props id ", id);
   return (
     <div
       style={{
