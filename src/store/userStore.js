@@ -11,22 +11,20 @@ class UserStore {
 
   constructor() {
     makeAutoObservable(this);
+    this.isLoading = false;
   }
-
-  addUser(user) {
-    this.users.push(user);
-  }
-
   getUser(id) {
     return this.users.find((user) => user.id === id);
   }
 
   async fetchUsers() {
     try {
+      this.isLoading = true;
       const res = await fetch("http://localhost:8000/users");
       const list = await res.json();
       console.log("полученные пользователи", list);
       this.users = [...this.users, ...list];
+      this.isLoading = false;
     } catch (error) {
       console.error("Error fetching users:", error);
     }

@@ -21,22 +21,6 @@ const MainPage = () => {
     <div style={{ display: "flex", height: "auto", background: "#212529" }}>
       <Navb />
       <PostsList />
-      {/* <div style={{ marginTop: "150px" }}>
-        {userStore.users.map((user) => (
-          <div
-            key={user.id}
-            style={{ border: "1px solid green ", padding: "5  px" }}
-          >
-            <div>name: {user.first_name}</div>
-            <div>surname: {user.last_name}</div>
-            <div>email: {user.email}</div>
-            <div>id: {user.id}</div>
-            <button onClick={() => userStore.removeUser(user.id)}>
-              Удалить пользователя
-            </button>
-          </div>
-        ))}
-      </div> */}
     </div>
   );
 };

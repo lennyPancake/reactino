@@ -12,6 +12,7 @@ import Navb from "./components/Navb";
 import Post from "./components/Post";
 import AboutPost from "./pages/AboutPost";
 import UsersList from "./components/UsersList";
+import AllUsers from "./pages/AllUsers";
 function App() {
   return (
     <>
@@ -20,7 +21,7 @@ function App() {
           <Route path="/register" element={<Registration />} />
           <Route path="/login" element={<Login />} />
           <Route path="/users/:id" element={<MainPage />} />
-          <Route path="/users/" element={<UsersList />} />
+          <Route path="/users/" element={<AllUsers />} />
           <Route path="/posts/" element={<AllPosts />} />
           <Route path="/posts/:id" element={<AboutPost />} />
         </Routes>

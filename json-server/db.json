@@ -46,6 +46,12 @@
       "text": "qqq",
       "authorId": 2,
       "postId": "3"
+    },
+    {
+      "id": 5,
+      "text": "good\n",
+      "authorId": 1,
+      "postId": "1"
     }
   ],
   "users": [
