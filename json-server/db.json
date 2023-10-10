@@ -13,6 +13,20 @@
       "content": "Содержание поста 3",
       "authorId": 2,
       "image": "http://localhost:8000/images/night.jpg"
+    },
+    {
+      "id": 1695801539654,
+      "title": "wawaw",
+      "content": "awaw",
+      "authorId": 1,
+      "image": "http://localhost:8000/images/night.jpg"
+    },
+    {
+      "id": 1696933187436,
+      "title": "Заголовок поста 121212",
+      "content": "Содержание поста 1Содержание поста 1Содержание поста 1Содержание поста 1Содержание поста 1",
+      "authorId": 1,
+      "image": "http://localhost:8000/images/night.jpg"
     }
   ],
   "comments": [
@@ -79,6 +93,46 @@
       "first_name": "123",
       "last_name": "123",
       "avatar": "http://localhost:8000/images/1695554882615-Image20230330111449.jpg"
+    },
+    {
+      "email": "wfwdw@mai.ru",
+      "password": "123123",
+      "first_name": "ya",
+      "last_name": "dekete",
+      "avatar": "",
+      "id": 1695554892918
+    },
+    {
+      "email": "wfwdw@mai.ru",
+      "password": "123123",
+      "first_name": "ya",
+      "last_name": "dekete",
+      "avatar": "",
+      "id": 1695554892919
+    },
+    {
+      "email": "123@maiklrui.ru",
+      "password": "123123",
+      "first_name": "123",
+      "last_name": "123",
+      "avatar": "http://localhost:8000/images/1696934969649-zhivotnye_lisa_31256.jpg",
+      "id": 1695554892920
+    },
+    {
+      "id": 1696935146619,
+      "email": "123123123@mail.ru",
+      "password": "123123",
+      "first_name": "123",
+      "last_name": "123",
+      "avatar": "http://localhost:8000/images/1696935094915-carunc-killua.gif"
+    },
+    {
+      "id": 1696935345153,
+      "email": "awdawd@mail.ru",
+      "password": "123123",
+      "first_name": "11111",
+      "last_name": "1111",
+      "avatar": "http://localhost:8000/images/1696935337152-22.png"
     }
   ]
 }

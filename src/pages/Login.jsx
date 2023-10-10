@@ -5,32 +5,29 @@ import { RootStoreContext } from "..";
 import { useContext } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import "../pages/Login.css";
-
+import { login } from "../API/userAPI";
 const Login = () => {
-  const [login, setLogin] = useState("");
+  const [logIn, setLogIn] = useState("");
   const { userStore } = useContext(RootStoreContext);
   const [pass, setPass] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    axios
-      .post("http://localhost:8000/login", {
-        username: login,
-        password: pass,
-      })
-      .then(function (response) {
-        // обработка успешного запроса
-        const { user, token } = response.data;
-        localStorage.setItem("token", token);
-
-        userStore.mainUser = user;
-        sessionStorage.setItem("mainUser", JSON.stringify(userStore.mainUser));
-        navigate("/users/" + user.id);
-      })
-      .catch(function (error) {
-        // обработка ошибки
-        console.log(error);
-      });
+  const handleLogin = async () => {
+    try {
+      const response = await login(logIn, pass);
+      console.log("ответ на авторизацию : ", response);
+      const { user, token } = response.data;
+      localStorage.setItem("token", token);
+      userStore.mainUser = user;
+      sessionStorage.setItem("mainUser", JSON.stringify(userStore.mainUser));
+      navigate("/users/" + user.id);
+    } catch (error) {
+      if (error.response && error.response.status === 301) {
+        alert("Неверный логин или пароль");
+      } else {
+        console.error("Произошла ошибка при авторизации:", error);
+      }
+    }
   };
 
   return (
@@ -46,7 +43,7 @@ const Login = () => {
             type="text"
             placeholder="Введите ваш email"
             value={login}
-            onChange={(event) => setLogin(event.target.value)}
+            onChange={(event) => setLogIn(event.target.value)}
           />
         </Form.Group>
         <Form.Group controlId="formBasicPassword">

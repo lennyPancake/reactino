@@ -1,5 +1,6 @@
 import axios from "axios";
 import { makeAutoObservable } from "mobx";
+import { loggedInClient } from "../API";
 
 class PostStore {
   posts = [];
@@ -45,14 +46,7 @@ class PostStore {
   async getPostsFromUserId(userId) {
     try {
       this.isLoadingPosts = true;
-      const response = await axios.get(
-        `http://localhost:8000/posts?authorId=${userId}`,
-        {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        }
-      );
+      const response = await loggedInClient.get(`/posts?authorId=${userId}`);
       this.posts = response.data;
       console.log("posts", response.data);
     } catch (error) {

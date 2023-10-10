@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx";
+import { getUsers } from "../API/userAPI";
 class UserStore {
   users = [];
   mainUser = {
@@ -20,10 +21,10 @@ class UserStore {
   async fetchUsers() {
     try {
       this.isLoading = true;
-      const res = await fetch("http://localhost:8000/users");
+      const res = await getUsers();
       const list = await res.json();
-      console.log("полученные пользователи", list);
-      this.users = [...this.users, ...list];
+      console.log("полученные пользователи", list); //?
+      this.users = [...list];
       this.isLoading = false;
     } catch (error) {
       console.error("Error fetching users:", error);

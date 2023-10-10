@@ -228,7 +228,7 @@ server.delete("/posts/:id", (req, res) => {
       __dirname,
       "static",
       "images",
-      posts[postIndex].image
+      posts[postIndex].image.replace("http://localhost:8000/images/", "")
     );
 
     // Удаляем изображение с сервера

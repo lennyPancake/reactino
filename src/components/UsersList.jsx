@@ -8,6 +8,7 @@ import { useNavigate } from "react-router";
 
 const UsersList = observer(() => {
   const { userStore } = useContext(RootStoreContext);
+  //console.log("qq", userStore.users[0].id);
   const navigate = useNavigate();
   useEffect(() => {
     !userStore.isLoading

@@ -9,19 +9,15 @@ import CommentStore from "./store/commentStore";
 
 export const RootStoreContext = createContext();
 const root = ReactDOM.createRoot(document.getElementById("root"));
-const userStoreInstance = new UserStore(); // Переименуйте переменную
-const postStoreInstance = new PostStore();
-const commentStoreInstance = new CommentStore();
-const stores = {
-  userStore: userStoreInstance,
-  postStore: postStoreInstance,
-  commentStore: commentStoreInstance,
-};
 
 root.render(
-  <React.StrictMode>
-    <RootStoreContext.Provider value={stores}>
-      <App />
-    </RootStoreContext.Provider>
-  </React.StrictMode>
+  <RootStoreContext.Provider
+    value={{
+      userStore: new UserStore(),
+      postStore: new PostStore(),
+      commentStore: new CommentStore(),
+    }}
+  >
+    <App />
+  </RootStoreContext.Provider>
 );

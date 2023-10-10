@@ -3,22 +3,18 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { RootStoreContext } from "..";
 import "../index.css";
 
-function AddPostModal() {
-  const [show, setShow] = useState(false);
+const EditPostModal = ({ show, onClose, editPostData }) => {
   const [loaded, setLoaded] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const { postStore } = useContext(RootStoreContext);
-  const [postData, setPostData] = useState({
-    title: "",
-    content: "",
-    authorId: JSON.parse(sessionStorage.getItem("mainUser")).id,
-    image: "",
-  });
+  const [postData, setPostData] = useState(editPostData);
+  useEffect(() => {
+    setPostData(editPostData);
+  }, [editPostData]);
+
   const handleCreatePost = () => {
     // Проверяем, что все необходимые поля заполнены
     if (!postData.title || !postData.content || !postData.image) {
@@ -48,11 +44,11 @@ function AddPostModal() {
         console.error("Ошибка при создании поста", error);
       })
       .finally(() => {
-        handleClose();
+        onClose();
         postStore.getPostsFromUserId(postData.authorId);
       });
   };
-
+  console.log("show:", editPostData);
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setPostData({ ...postData, [name]: value });
@@ -81,24 +77,15 @@ function AddPostModal() {
 
   return (
     <>
-      <Button
-        style={{
-          marginTop: "15px",
-          marginLeft: "320px",
-          width: "62.4%",
-          height: "50px",
+      <Modal
+        show={show}
+        onHide={() => {
+          onClose();
         }}
-        variant="outline-secondary"
-        className="text-light"
-        onClick={handleShow}
       >
-        Создать пост
-      </Button>
-
-      <Modal show={show} onHide={handleClose}>
         <div className="bg-dark mt-0">
           <Modal.Header closeButton>
-            <Modal.Title>Создать пост</Modal.Title>
+            <Modal.Title>Редактировать пост</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
@@ -106,7 +93,7 @@ function AddPostModal() {
                 className=" mb-3"
                 controlId="exampleForm.ControlInput1"
               >
-                <Form.Label>Загрузить изображение: </Form.Label>
+                <Form.Label>Изменить изображение: </Form.Label>
                 <Form.Control
                   type="file"
                   name="image"
@@ -122,6 +109,7 @@ function AddPostModal() {
                 <Form.Control
                   type="text"
                   name="title"
+                  value={postData.title}
                   onChange={handleInputChange}
                   placeholder="Введите название поста"
                   autoFocus
@@ -133,6 +121,7 @@ function AddPostModal() {
               >
                 <Form.Label>Содержание поста:</Form.Label>
                 <Form.Control
+                  value={postData.content}
                   onChange={handleInputChange}
                   name="content"
                   type="text"
@@ -143,7 +132,7 @@ function AddPostModal() {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
+            <Button variant="secondary" onClick={() => onClose()}>
               Закрыть
             </Button>
             <Button
@@ -152,13 +141,13 @@ function AddPostModal() {
                 handleCreatePost();
               }}
             >
-              Опубликовать пост
+              Сохранить изменения
             </Button>
           </Modal.Footer>
         </div>
       </Modal>
     </>
   );
-}
+};
 
-export default AddPostModal;
+export default EditPostModal;

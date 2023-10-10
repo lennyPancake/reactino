@@ -28,7 +28,20 @@ const MainPage = () => {
       }}
     >
       <Navb />
-      {id == mainUserId ? <AddPostModal /> : ""}
+      {id == mainUserId ? (
+        <AddPostModal
+          showButton={true}
+          show={false}
+          postData={{
+            title: "",
+            content: "",
+            authorId: JSON.parse(sessionStorage.getItem("mainUser")).id,
+            image: "",
+          }}
+        />
+      ) : (
+        ""
+      )}
       <PostsList />
     </div>
   );

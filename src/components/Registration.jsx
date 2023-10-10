@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { RootStoreContext } from "..";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button } from "react-bootstrap";
-
+import { register } from "../API/userAPI";
 const Registration = () => {
   const { userStore } = useContext(RootStoreContext);
   const navigate = useNavigate();
@@ -46,26 +46,24 @@ const Registration = () => {
     setUserData({ ...userData, [name]: value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // Отправляем данные на сервер
-    axios
-      .post("http://localhost:8000/register", userData)
-      .then((response) => {
-        console.log("Регистрация прошла успешно", response.data);
-        const { user, token } = response.data;
-        localStorage.setItem("token", token);
-        userStore.mainUser = user;
-        console.log(
-          "Айди зарегистрированного пользователя: ",
-          userStore.mainUser.id
-        );
-        sessionStorage.setItem("mainUser", JSON.stringify(userStore.mainUser));
-        navigate("/users/" + userStore.mainUser.id);
-      })
-      .catch((error) => {
-        console.error("Ошибка при регистрации", error);
-      });
+    try {
+      const response = await register(userData);
+      console.log("Регистрация прошла успешно", response.data);
+      const { user, token } = response.data;
+      localStorage.setItem("token", token);
+      userStore.mainUser = user;
+      console.log(
+        "Айди зарегистрированного пользователя: ",
+        userStore.mainUser.id
+      );
+      sessionStorage.setItem("mainUser", JSON.stringify(userStore.mainUser));
+      navigate("/users/" + userStore.mainUser.id);
+    } catch (error) {
+      console.error("Ошибка при регистрации", error);
+    }
   };
 
   return (
@@ -76,29 +74,29 @@ const Registration = () => {
         onSubmit={handleSubmit}
       >
         <h2>Регистрация</h2>
-        <div>
+        <div className="mt-4">
           Имя:
           <Form.Control
             type="text"
             name="first_name"
             value={userData.first_name}
             onChange={handleInputChange}
-            className="mt-3"
+            className="mt-2"
             placeholder="Имя"
           />
         </div>
-        <div>
+        <div className="mt-4">
           Фамилия:
           <Form.Control
             type="text"
             name="last_name"
             value={userData.last_name}
             onChange={handleInputChange}
-            className="mt-3"
+            className="mt-2"
             placeholder="Фамилия"
           />
         </div>
-        <div>
+        <div className="mt-4">
           {" "}
           Email:
           <Form.Control
@@ -106,22 +104,22 @@ const Registration = () => {
             name="email"
             value={userData.email}
             onChange={handleInputChange}
-            className="mt-3"
+            className="mt-2"
             placeholder="email"
           />
         </div>
-        <div>
+        <div className="mt-4">
           Пароль:
           <Form.Control
             type="password"
             name="password"
             value={userData.password}
             onChange={handleInputChange}
-            className="mt-3"
+            className="mt-2"
             placeholder="Password"
           />
         </div>
-        <div>
+        <div className="mt-4">
           Повторите пароль:
           {!match ? (
             <div style={{ color: "red" }}>Пароли не совпадают</div>
@@ -136,17 +134,17 @@ const Registration = () => {
               setRetryPass(event.target.value);
               setMatch(event.target.value === userData.password);
             }}
-            className="mt-3"
+            className="mt-2"
             placeholder="Password"
           />
         </div>
-        <div>
+        <div className="mt-4">
           Аватар:
           <Form.Control
             type="file"
             name="avatar"
             onChange={handleAvatarChange}
-            className="mt-3"
+            className="mt-2"
           />
           {loaded ? (
             <div style={{ color: "green" }}>Изображение успешно загружено</div>
@@ -154,7 +152,7 @@ const Registration = () => {
             ""
           )}
         </div>
-        <div>
+        <div className="mt-5">
           Уже зарегистрированы? <a href="/login">Войти</a>
         </div>
         <div className="d-flex justify-content-end align-items-start mt-3">
