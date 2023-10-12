@@ -252,9 +252,9 @@ server.delete("/posts/:id", (req, res) => {
   }
 });
 // Эндпоинт для обновления поста
-server.put("/posts/:id", (req, res) => {
+server.put("/posts", (req, res) => {
   try {
-    const postId = parseInt(req.params.id);
+    const postId = parseInt(req.body.id);
     const { title, content, image } = req.body;
     const db = JSON.parse(
       fs.readFileSync(path.resolve(__dirname, "db.json"), "UTF-8")
@@ -265,7 +265,9 @@ server.put("/posts/:id", (req, res) => {
     const postIndex = posts.findIndex((post) => post.id === postId);
 
     if (postIndex === -1) {
-      return res.status(404).json({ message: "Post not found" });
+      return res
+        .status(404)
+        .json({ message: "Post not found" + req.params.title });
     }
 
     // Обновляем данные поста

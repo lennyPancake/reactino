@@ -42,7 +42,7 @@ const Login = () => {
           <Form.Control
             type="text"
             placeholder="Введите ваш email"
-            value={login}
+            value={logIn}
             onChange={(event) => setLogIn(event.target.value)}
           />
         </Form.Group>

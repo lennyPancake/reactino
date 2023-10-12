@@ -61,8 +61,6 @@ const Post = observer((props) => {
           <Card.Body>
             <Card.Title>{post.title}</Card.Title>
             <Card.Text>{post.content}</Card.Text>
-
-            {/* Ссылка для возврата на страницу постов */}
             <Link to="/posts/">
               <Button variant="outline-light">Назад к постам</Button>
             </Link>

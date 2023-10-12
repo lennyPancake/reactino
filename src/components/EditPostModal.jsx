@@ -15,38 +15,14 @@ const EditPostModal = ({ show, onClose, editPostData }) => {
     setPostData(editPostData);
   }, [editPostData]);
 
-  const handleCreatePost = () => {
+  const handleEditPost = () => {
     // Проверяем, что все необходимые поля заполнены
     if (!postData.title || !postData.content || !postData.image) {
       alert("Заполните все поля");
       console.log("image:", postData.image);
       return;
     }
-
-    // Отправляем POST-запрос на сервер для создания поста
-    axios
-      .post("http://localhost:8000/posts", postData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        console.log("Пост успешно создан", response.data);
-        // Очищаем данные формы после успешной отправки
-        setPostData({
-          title: "",
-          content: "",
-          authorId: JSON.parse(sessionStorage.getItem("mainUser")).id,
-          image: "",
-        });
-      })
-      .catch((error) => {
-        console.error("Ошибка при создании поста", error);
-      })
-      .finally(() => {
-        onClose();
-        postStore.getPostsFromUserId(postData.authorId);
-      });
+    postStore.updatePostByData(postData);
   };
   console.log("show:", editPostData);
   const handleInputChange = (event) => {
@@ -138,7 +114,7 @@ const EditPostModal = ({ show, onClose, editPostData }) => {
             <Button
               variant="primary"
               onClick={() => {
-                handleCreatePost();
+                handleEditPost();
               }}
             >
               Сохранить изменения

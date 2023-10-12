@@ -10,12 +10,6 @@ const UsersList = observer(() => {
   const { userStore } = useContext(RootStoreContext);
   //console.log("qq", userStore.users[0].id);
   const navigate = useNavigate();
-  useEffect(() => {
-    !userStore.isLoading
-      ? userStore.fetchUsers()
-      : console.log("идет загрузка");
-  }, []);
-
   return (
     <div style={{ marginLeft: "310px" }} className="ml-3">
       <h1>Список Блогов</h1>
@@ -44,7 +38,7 @@ const UsersList = observer(() => {
                 className="d-flex justify-content-end"
               >
                 <Button
-                  variant="primary"
+                  variant="outline-light"
                   onClick={() => {
                     navigate(`/users/${user.id}`);
                   }}

@@ -12,7 +12,6 @@ import axios from "axios";
 import AddPostModal from "./AddPostModal";
 import { useState } from "react";
 import EditPostModal from "./EditPostModal";
-import { toJS } from "mobx";
 const PostsList = observer(() => {
   const { userStore, postStore } = useContext(RootStoreContext);
   const mainUserId = JSON.parse(sessionStorage.getItem("mainUser")).id;
@@ -24,21 +23,7 @@ const PostsList = observer(() => {
   };
   //console.log("users", userStore.users[0]);
   const handleDeletePost = (postId) => {
-    axios
-      .delete(`http://localhost:8000/posts/${postId}`, {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      })
-      .then((response) => {
-        // Обработка успешного удаления поста
-        console.log(`Пост с идентификатором ${postId} удален.`);
-        postStore.getPostsFromUserId(mainUserId);
-      })
-      .catch((error) => {
-        // Обработка ошибок при удалении поста
-        console.error(`Ошибка при удалении поста: ${error}`);
-      });
+    postStore.deletePotsById(postId);
   };
 
   return (
@@ -156,6 +141,7 @@ const PostsList = observer(() => {
             );
           })
         ) : (
+          //postStore.isLoadingPost
           <h3>Здесь пока пусто</h3>
         )}
       </div>

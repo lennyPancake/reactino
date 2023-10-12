@@ -14,7 +14,7 @@ function withAuth(Component) {
       if (token) {
         const decodedToken = jwt_decode(token);
         const currentTime = Date.now() / 1000;
-
+        console.log("decoded token: ", decodedToken);
         if (decodedToken.exp < currentTime) {
           navigate("/login");
           console.log("Токен истек. redirect...");

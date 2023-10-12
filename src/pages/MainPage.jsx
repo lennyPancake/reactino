@@ -13,8 +13,10 @@ const MainPage = () => {
   const { id } = useParams();
   let mainUserId = undefined;
   const { userStore, postStore } = useContext(RootStoreContext);
-  postStore.getPostsFromUserId(id);
-  userStore.fetchUsers();
+  useEffect(() => {
+    postStore.getPostsFromUserId(id);
+    userStore.fetchUsers();
+  }, []);
   if (sessionStorage.getItem("mainUser")) {
     mainUserId = JSON.parse(sessionStorage.getItem("mainUser")).id;
   }

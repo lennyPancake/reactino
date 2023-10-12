@@ -22,9 +22,8 @@ class UserStore {
     try {
       this.isLoading = true;
       const res = await getUsers();
-      const list = await res.json();
-      console.log("полученные пользователи", list); //?
-      this.users = [...list];
+      console.log("полученные пользователи", res.data); //?
+      this.users = res.data;
       this.isLoading = false;
     } catch (error) {
       console.error("Error fetching users:", error);

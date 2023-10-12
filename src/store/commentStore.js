@@ -1,5 +1,6 @@
 import axios from "axios";
 import { makeAutoObservable } from "mobx";
+import { add, getCommentsByPostId } from "../API/commentAPI";
 
 class CommentStore {
   comments = [];
@@ -11,14 +12,7 @@ class CommentStore {
   async getCommentsForPost(postId) {
     try {
       this.isLoading = true;
-      const response = await axios.get(
-        `http://localhost:8000/comments?postId=${postId}`,
-        {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        }
-      );
+      const response = await getCommentsByPostId(postId);
       this.comments = response.data;
       console.log("comments", response.data);
     } catch (error) {
@@ -31,15 +25,7 @@ class CommentStore {
   // Метод для добавления нового комментария
   async addComment(comment) {
     try {
-      const response = await axios.post(
-        "http://localhost:8000/comments",
-        comment,
-        {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        }
-      );
+      const response = await add(comment);
       // Обновляем стор после успешного добавления
       this.comments.push(response.data);
     } catch (error) {

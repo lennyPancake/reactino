@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navb from "../components/Navb";
 import { useContext } from "react";
 import { RootStoreContext } from "..";
@@ -6,9 +6,11 @@ import PostsList from "../components/PostsList";
 import withAuth from "../components/withAuth";
 
 const AllPosts = () => {
-  const { postStore, userStore } = useContext(RootStoreContext);
-  postStore.getPosts();
-  userStore.fetchUsers();
+  const { userStore, postStore } = useContext(RootStoreContext);
+  useEffect(() => {
+    userStore.fetchUsers();
+    postStore.getPosts();
+  }, []);
   return (
     <div style={{ display: "flex", height: "auto", background: "#212529" }}>
       <Navb />
