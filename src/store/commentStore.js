@@ -4,10 +4,9 @@ import { add, getCommentsByPostId } from "../API/commentAPI";
 
 class CommentStore {
   comments = [];
-
+  isLoading = false;
   constructor() {
     makeAutoObservable(this);
-    this.isLoading = false;
   }
   async getCommentsForPost(postId) {
     try {

@@ -28,12 +28,8 @@ function AddPostModal() {
     }
 
     // Отправляем POST-запрос на сервер для создания поста
-    axios
-      .post("http://localhost:8000/posts", postData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+    postStore
+      .createPostByData(postData)
       .then((response) => {
         console.log("Пост успешно создан", response.data);
         // Очищаем данные формы после успешной отправки
@@ -49,7 +45,6 @@ function AddPostModal() {
       })
       .finally(() => {
         handleClose();
-        postStore.getPostsFromUserId(postData.authorId);
       });
   };
 
@@ -101,7 +96,7 @@ function AddPostModal() {
             <Modal.Title>Создать пост</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form>
+            <Form onSubmit={handleCreatePost}>
               <Form.Group
                 className=" mb-3"
                 controlId="exampleForm.ControlInput1"

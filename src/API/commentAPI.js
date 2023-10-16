@@ -1,7 +1,7 @@
 import { loggedInClient } from ".";
 
 export const getCommentsByPostId = async (id) => {
-  const res = await loggedInClient.get(`/comments?postId${id}`);
+  const res = await loggedInClient.get(`/comments?postId=${id}`);
   return res;
 };
 

@@ -5,11 +5,20 @@ import { ListGroup } from "react-bootstrap";
 import Image from "react-bootstrap/Image";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router";
+import LoadingSpinner from "./LoadingSpinner";
 
 const UsersList = observer(() => {
   const { userStore } = useContext(RootStoreContext);
   //console.log("qq", userStore.users[0].id);
   const navigate = useNavigate();
+  if (userStore.isLoading) {
+    return (
+      <div style={{ marginLeft: "310px" }}>
+        {" "}
+        <LoadingSpinner />;
+      </div>
+    );
+  }
   return (
     <div style={{ marginLeft: "310px" }} className="ml-3">
       <h1>Список Блогов</h1>
@@ -23,8 +32,8 @@ const UsersList = observer(() => {
               <Image
                 src={user.avatar}
                 alt="Аватар"
-                roundedCircle
-                style={{ width: "80px", height: "80px", marginRight: "10px" }}
+                rounded
+                style={{ width: "100px", height: "100px", marginRight: "10px" }}
               />
               <div style={{ width: "30%" }}>
                 <h5>

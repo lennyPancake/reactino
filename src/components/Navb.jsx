@@ -1,13 +1,22 @@
 import React from "react";
 import { Container, Nav } from "react-bootstrap";
 import MainUser from "./MainUser";
-import { Navbar } from "react-bootstrap";
+import { Navbar, Image } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import "./Navbb.css";
+
+const linkStyle = {
+  textDecoration: "none",
+  color: "white",
+  flexDirection: "column",
+};
+
 const Navb = () => {
   let id = 1;
   if (sessionStorage.getItem("mainUser")) {
     id = JSON.parse(sessionStorage.getItem("mainUser")).id;
   }
+
   return (
     <div
       style={{
@@ -15,42 +24,42 @@ const Navb = () => {
         textAlign: "center",
         height: "100vh",
         position: "fixed",
-        borderRight: "1px white solid",
+        borderRight: "1px gray solid",
         paddingTop: "50px",
         marginRight: "100px",
       }}
-      className="bg-212529 "
+      className="bg-212529"
     >
-      <Navbar className="bg-212529 ">
+      <Image
+        style={{ width: "250px", marginBottom: "20px" }}
+        src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
+        rounded
+      />
+      <Navbar className="bg-212529">
         <Container className="bg-212529">
-          <Navbar.Brand className="bg-212529 mx-auto" href="/posts/">
-            Все посты
-          </Navbar.Brand>
+          <Link to="/posts" style={linkStyle}>
+            <Navbar.Brand className="bg-212529 mx-auto">Все посты</Navbar.Brand>
+          </Link>
         </Container>
       </Navbar>
       <br />
       <Navbar className="bg-212529">
         <Container className="bg-212529">
-          <Navbar.Brand className="bg-212529 mx-auto" href={`/users/${id}`}>
-            Мой блог
-          </Navbar.Brand>
+          <Link to={`/users/${id}`} style={linkStyle}>
+            <Navbar.Brand className="bg-212529 mx-auto">Мой блог</Navbar.Brand>
+          </Link>
         </Container>
       </Navbar>
       <br />
       <Navbar className="bg-212529">
         <Container className="bg-212529">
-          <Navbar.Brand className="bg-212529 mx-auto" href="/users/">
-            Все блоги
-          </Navbar.Brand>
+          <Link to="/users" style={linkStyle}>
+            <Navbar.Brand className="bg-212529 mx-auto">Все блоги</Navbar.Brand>
+          </Link>
         </Container>
       </Navbar>
       <br />
-      <Navbar className="bg-212529">
-        <Container className="bg-212529">
-          <Navbar.Brand href="#home" className="bg-212529 mx-auto">
-            React Bootstrap
-          </Navbar.Brand>
-        </Container>
+      <Navbar className="">
         <MainUser />
       </Navbar>
     </div>

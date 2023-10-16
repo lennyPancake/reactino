@@ -9,6 +9,7 @@ class UserStore {
     email: "",
     password: "",
   };
+  isLoading = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -24,9 +25,10 @@ class UserStore {
       const res = await getUsers();
       console.log("полученные пользователи", res.data); //?
       this.users = res.data;
-      this.isLoading = false;
     } catch (error) {
       console.error("Error fetching users:", error);
+    } finally {
+      this.isLoading = false;
     }
   }
 }

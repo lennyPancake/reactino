@@ -3,6 +3,7 @@ const fs = require("fs");
 const jsonServer = require("json-server");
 const path = require("path");
 const multer = require("multer");
+const short = require("short-uuid");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -83,7 +84,7 @@ server.post("/register", (req, res) => {
     }
 
     // Генерируем уникальный ID для нового пользователя (просто для примера, в реальном приложении используйте UUID или другой метод)
-    const id = Date.now();
+    const id = short();
     // Создаем нового пользователя
     const newUser = {
       id,
@@ -121,7 +122,7 @@ server.post("/posts", (req, res) => {
 
     // Генерируем уникальный ID для нового поста (просто для примера, в реальном приложении используйте UUID или другой метод)
     const newPostId = posts.length + 1;
-    const id = Date.now();
+    const id = short().new();
     // Создаем новый пост
     const newPost = {
       id,
@@ -180,8 +181,8 @@ server.post("/comments", (req, res) => {
     );
     const { comments = [] } = db;
 
-    // Генерируем уникальный ID для нового комментария (просто для примера, в реальном приложении используйте UUID или другой метод)
-    const newCommentId = comments.length + 1;
+    // Генерируем уникальный ID для нового комментария (просто для примера, в реальном приложении используйте short или другой метод)
+    const newCommentId = shortv4();
 
     // Создаем новый комментарий
     const newComment = {

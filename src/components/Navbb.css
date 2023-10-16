@@ -3,4 +3,5 @@
   color: white;
   text-align: center;
   background-color: #212529;
+  flex-direction: column;
 }

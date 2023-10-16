@@ -11,15 +11,20 @@ import MainUser from "../components/MainUser";
 import AddPostModal from "../components/AddPostModal";
 const MainPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   let mainUserId = undefined;
   const { userStore, postStore } = useContext(RootStoreContext);
   useEffect(() => {
-    postStore.getPostsFromUserId(id);
     userStore.fetchUsers();
+    postStore.getPostsFromUserId(id);
+    postStore.loaded = true;
   }, []);
   if (sessionStorage.getItem("mainUser")) {
     mainUserId = JSON.parse(sessionStorage.getItem("mainUser")).id;
+  } else {
+    navigate("/login");
   }
+
   return (
     <div
       style={{

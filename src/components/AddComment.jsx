@@ -3,7 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import { observer } from "mobx-react-lite";
 import { RootStoreContext } from "..";
 
-const AddComment = observer(({ postId }) => {
+const AddComment = ({ postId }) => {
   const [text, setText] = useState("");
   const { commentStore } = useContext(RootStoreContext);
   const mainUserId = JSON.parse(sessionStorage.getItem("mainUser")).id;
@@ -12,24 +12,18 @@ const AddComment = observer(({ postId }) => {
     if (text.trim() === "") {
       return;
     }
-
-    // Создаем объект комментария
     const newComment = {
       text: text,
       postId: postId,
       authorId: mainUserId,
       id: Date.now(),
     };
-
-    // Добавляем комментарий
     await commentStore.addComment(newComment);
-
-    // Очищаем поле ввода после добавления
     setText("");
   };
 
   return (
-    <div>
+    <div style={{ height: "200px", marginLeft: "310px" }}>
       <h4>Добавить комментарий</h4>
       <Form style={{ width: "40%" }} onSubmit={handleAddComment}>
         <Form.Group controlId="commentText">
@@ -48,6 +42,6 @@ const AddComment = observer(({ postId }) => {
       </Form>
     </div>
   );
-});
+};
 
 export default AddComment;

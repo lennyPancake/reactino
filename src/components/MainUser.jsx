@@ -3,9 +3,9 @@ import { useContext } from "react";
 import { RootStoreContext } from "..";
 import { Col } from "react-bootstrap";
 import Image from "react-bootstrap/Image";
-import Button from "react-bootstrap/Button";
+import Dropdown from "react-bootstrap/Dropdown";
+import SplitButton from "react-bootstrap/SplitButton";
 import { useNavigate } from "react-router-dom";
-import jwtDecode from "jwt-decode";
 const MainUser = () => {
   const navigate = useNavigate();
   const { userStore } = useContext(RootStoreContext);
@@ -14,33 +14,46 @@ const MainUser = () => {
 
   console.log("объект пользователя", userStore.mainUser);
   return (
-    <Button
+    <SplitButton
       onClick={() => {
-        localStorage.removeItem("token");
-        sessionStorage.removeItem("mainUser");
-        navigate("/login");
+        navigate(`/users/${userStore.mainUser.id}`);
       }}
+      title={
+        <div>
+          <Col xs={6} md={4} style={{ width: "auto" }}>
+            <Image
+              style={{ width: "50px", height: "50px" }}
+              src={userStore.mainUser.avatar}
+              roundedCircle
+            />
+          </Col>
+          <div style={{ marginLeft: "15px" }}>
+            {userStore.mainUser.first_name} {userStore.mainUser.last_name}
+            <div>{userStore.mainUser.email}</div>
+          </div>
+        </div>
+      }
+      id="dropdown-menu-align-right"
       variant="outline-secondary"
       style={{
         display: "flex",
-        marginTop: "250px",
+        marginTop: "33%",
         marginLeft: "20px",
         position: "fixed",
         color: "white",
+        width: "19%",
       }}
     >
-      <Col xs={6} md={4} style={{ width: "auto" }}>
-        <Image
-          style={{ width: "50px", height: "50px" }}
-          src={userStore.mainUser.avatar}
-          roundedCircle
-        />
-      </Col>
-      <div style={{ marginLeft: "15px" }}>
-        {userStore.mainUser.first_name} {userStore.mainUser.last_name}
-        <div>{userStore.mainUser.email}</div>
-      </div>
-    </Button>
+      <Dropdown.Item
+        onClick={() => {
+          localStorage.removeItem("token");
+          sessionStorage.removeItem("mainUser");
+          navigate("/login");
+        }}
+      >
+        Выход
+      </Dropdown.Item>
+    </SplitButton>
   );
 };
 

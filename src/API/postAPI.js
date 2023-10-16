@@ -1,5 +1,4 @@
 import { loggedInClient } from "./index";
-
 export const getPosts = async () => {
   const res = await loggedInClient.get("/posts");
   return res;
@@ -14,7 +13,7 @@ export const getPost = async (id) => {
   return res;
 };
 export const createPost = async (post) => {
-  const res = await loggedInClient.post("/post", post);
+  const res = await loggedInClient.post("/posts", post);
   return res;
 };
 export const deletePost = async (id) => {

@@ -23,6 +23,7 @@ const EditPostModal = ({ show, onClose, editPostData }) => {
       return;
     }
     postStore.updatePostByData(postData);
+    onClose();
   };
   console.log("show:", editPostData);
   const handleInputChange = (event) => {

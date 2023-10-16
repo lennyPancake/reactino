@@ -1,122 +1,38 @@
 {
   "posts": [
     {
-      "id": 1,
-      "title": "Заголовок поста 2",
-      "content": "Содержание поста 1Содержание поста 1Содержание поста 1Содержание поста 1Содержание поста 1",
+      "id": "1NCs4iZo5PXfvHAL1bSP7x",
+      "title": "awdawd",
+      "content": "awdawdawd",
       "authorId": 1,
-      "image": "http://localhost:8000/images/night.jpg"
-    },
-    {
-      "id": 3,
-      "title": "Заголовок поста 3",
-      "content": "Содержание поста 3",
-      "authorId": 2,
-      "image": "http://localhost:8000/images/night.jpg"
-    },
-    {
-      "id": 1695801539654,
-      "title": "wawaw",
-      "content": "awaw",
-      "authorId": 1,
-      "image": "http://localhost:8000/images/night.jpg"
-    },
-    {
-      "id": 1696933187436,
-      "title": "Заголовок поста 121212",
-      "content": "Содержание поста 1Содержание поста 1Содержание поста 1Содержание поста 1Содержание поста 1",
-      "authorId": 1,
-      "image": "http://localhost:8000/images/night.jpg"
+      "image": "http://localhost:8000/images/1697459444139-ÑÐ¾.jpg"
     }
   ],
-  "comments": [
-    {
-      "id": 1,
-      "text": "Комментарий от пользователя 2",
-      "authorId": 2,
-      "postId": 1
-    },
-    {
-      "id": 2,
-      "text": "Комментарий от пользователя 3",
-      "authorId": 3,
-      "postId": 1
-    },
-    {
-      "id": 3,
-      "text": "Как дела?\n",
-      "authorId": 1695554892917,
-      "postId": "2"
-    },
-    {
-      "id": 4,
-      "text": "qqq",
-      "authorId": 2,
-      "postId": "3"
-    },
-    {
-      "id": 5,
-      "text": "good\n",
-      "authorId": 1,
-      "postId": "1"
-    }
-  ],
+  "comments": [],
   "users": [
     {
       "id": 1,
-      "first_name": "lenny",
-      "last_name": "brown",
+      "first_name": "Lenny",
+      "last_name": "Brown",
       "email": "user1@example.com",
       "password": "password1",
       "avatar": "http://localhost:8000/images/ava1.png"
     },
     {
-      "id": 2,
-      "first_name": "Martin",
-      "last_name": "Cool",
-      "email": "user2@example.com",
-      "password": "password2",
-      "avatar": "http://localhost:8000/images/ava2.jpg"
+      "id": "e7f90535-7cb1-4811-bc3e-24e3dcb7f467",
+      "email": "myemail@mail.com",
+      "password": "password",
+      "first_name": "Павел",
+      "last_name": "Ширяев",
+      "avatar": "http://localhost:8000/images/1697380362973-man.jpg"
     },
     {
-      "id": 3,
-      "first_name": "Son",
-      "last_name": "Apolni",
-      "email": "user3@example.com",
-      "password": "password3",
-      "avatar": "http://localhost:8000/images/ava1.png"
-    },
-    {
-      "id": 1695554892917,
-      "email": "123",
-      "password": "123",
-      "first_name": "123",
-      "last_name": "123",
-      "avatar": "http://localhost:8000/images/1695554882615-Image20230330111449.jpg"
-    },
-    {
-      "email": "123@maiklrui.ru",
-      "password": "123123",
-      "first_name": "123",
-      "last_name": "123",
-      "avatar": "http://localhost:8000/images/1696934969649-zhivotnye_lisa_31256.jpg",
-      "id": 1695554892920
-    },
-    {
-      "id": 1696935146619,
-      "email": "123123123@mail.ru",
-      "password": "123123",
-      "first_name": "123",
-      "last_name": "123",
-      "avatar": "http://localhost:8000/images/1696935094915-carunc-killua.gif"
-    },
-    {
-      "id": 1696935345153,
-      "email": "awdawd@mail.ru",
-      "password": "123123",
-      "first_name": "11111",
-      "last_name": "1111",
-      "avatar": "http://localhost:8000/images/1696935337152-22.png"
+      "id": "5db770e2-1b46-4345-b8ae-8730eeab470e",
+      "email": "example@mail.com",
+      "password": "password",
+      "first_name": "Name",
+      "last_name": "Surname",
+      "avatar": "http://localhost:8000/images/1697380439669-1.jpg"
     }
   ]
 }

@@ -1,15 +1,18 @@
 import React from "react";
 import { Spinner } from "react-bootstrap";
-
+import { useContext } from "react";
+import { RootStoreContext } from "..";
 const LoadingSpinner = () => {
+  const { userStore, postStore } = useContext(RootStoreContext);
+  console.log("t/f?", postStore.isLoadingPosts);
   return (
     <div
       style={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        width: "100%",
         height: "500px",
+
         backgroundColor: "#212529", // Цвет фона
       }}
     >
