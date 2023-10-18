@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import Navb from "../components/Navb";
 import { useContext } from "react";
 import { RootStoreContext } from "..";
 import PostsList from "../components/PostsList";

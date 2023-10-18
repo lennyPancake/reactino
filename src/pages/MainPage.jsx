@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import withAuth from "../components/withAuth";
-import Navb from "../components/Navb";
 import { RootStoreContext } from "../index";
 import PostsList from "../components/PostsList";
 import AddPostModal from "../components/AddPostModal";

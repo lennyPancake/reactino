@@ -1,9 +1,9 @@
 import React from "react";
 import "./index.css";
 import { createContext } from "react";
-import ReactDOM from "react-dom/client"; // Измените импорт на react-dom
+import ReactDOM from "react-dom/client";
 import App from "./App";
-import UserStore from "./store/userStore"; // Обновите импорт
+import UserStore from "./store/userStore";
 import PostStore from "./store/postStore";
 import CommentStore from "./store/commentStore";
 

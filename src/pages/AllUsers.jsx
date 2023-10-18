@@ -1,6 +1,5 @@
 import React from "react";
 import UsersList from "../components/UsersList";
-import Navb from "../components/Navb";
 import withAuth from "../components/withAuth";
 import { useContext, useEffect } from "react";
 import { RootStoreContext } from "..";
