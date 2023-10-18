@@ -1,12 +1,9 @@
-import axios from "axios";
 import { makeAutoObservable } from "mobx";
-import { loggedInClient } from "../API";
 import {
   deletePost,
   getPost,
   getPosts,
   getPostsFromUser,
-  getPostsFromUserId,
   updatePost,
   createPost,
 } from "../API/postAPI";
@@ -36,7 +33,6 @@ class PostStore {
       this.isLoading = true;
       const response = await getPosts();
       this.posts = response.data;
-      //console.log("posts", response.data);
     } catch (error) {
       console.error("Ошибка при получении постов:", error);
     } finally {
@@ -48,7 +44,6 @@ class PostStore {
       this.isLoading = true;
       const response = await getPostsFromUser(userId);
       this.posts = response.data;
-      //console.log("posts", response.data);
     } catch (error) {
       console.error("Ошибка при получении постов:", error);
     } finally {
@@ -57,7 +52,7 @@ class PostStore {
   }
   async deletePostById(id) {
     try {
-      const response = await deletePost(id);
+      await deletePost(id);
       this.posts = this.posts.filter((post) => post.id !== id);
       console.log(`Пост с идентификатором ${id} удален.`);
     } catch (error) {
@@ -79,7 +74,8 @@ class PostStore {
   async createPostByData(postData) {
     try {
       const response = await createPost(postData);
-      this.posts = [...this.posts, postData];
+      this.posts = [...this.posts, response.data];
+      console.log("Пост создан: ", response.data);
     } catch (error) {
       console.error("Ошибка при создании поста:", error);
     }

@@ -1,29 +1,28 @@
 import React, { useContext, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { RootStoreContext } from "..";
-import { Card, Spinner } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import MainUser from "./MainUser";
 import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
 import { Link } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
-import axios from "axios";
-import AddPostModal from "./AddPostModal";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import EditPostModal from "./EditPostModal";
 import LoadingSpinner from "./LoadingSpinner";
 const PostsList = observer(() => {
+  const navigate = useNavigate();
   const { userStore, postStore } = useContext(RootStoreContext);
-  const mainUserId = JSON.parse(sessionStorage.getItem("mainUser")).id;
+  let mainUserId = undefined;
+  if (sessionStorage.length == 0) {
+    navigate("/login");
+  } else {
+    mainUserId = JSON.parse(sessionStorage.getItem("mainUser")).id;
+  }
   const [showModal, setShowModal] = useState(false);
   const [editPostData, setEditPostData] = useState({});
-  const [loading, setLoading] = useState(true);
-  const handleUpdatePost = (post) => {
-    //setShowModal(true);
-    console.log(showModal);
-  };
-  //console.log("users", userStore.users[0]);
   const handleDeletePost = (postId) => {
     postStore.deletePostById(postId);
   };
@@ -61,7 +60,7 @@ const PostsList = observer(() => {
         }}
         editPostData={editPostData}
       />
-      <div style={{ marginLeft: "310px" }}>
+      <div style={{ width: "100%", marginLeft: "310px" }}>
         {postStore.posts.map((post) => {
           const author = userStore.users.find(
             (user) => user.id === post.authorId
@@ -73,15 +72,23 @@ const PostsList = observer(() => {
               style={{
                 color: "white",
                 backgroundColor: "#3f4653",
-                height: "550px",
-                width: "80%",
+                height: "auto",
+                maxWidth: "100%",
                 marginLeft: "10px",
+                width: "80%",
+                maxHeight: "none",
                 marginTop: "10px",
               }}
             >
               <div className="mb-2">
                 {author && (
-                  <Card.Header style={{ marginTop: "0", display: "flex" }}>
+                  <Card.Header
+                    style={{
+                      marginTop: "0",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
                     <div className="d-flex mt-0">
                       <Col
                         xs={2}
@@ -90,8 +97,9 @@ const PostsList = observer(() => {
                       >
                         <Image
                           style={{
-                            width: "30px",
-                            height: "30px",
+                            maxWidth: "35px",
+                            maxHeight: "35px",
+                            width: "auto",
                             marginRight: "10px",
                             marginTop: "0",
                           }}
@@ -104,7 +112,7 @@ const PostsList = observer(() => {
                           justifyContent: "center",
                           display: "flex",
                           flexWrap: "nowrap",
-                          marginTop: "0",
+                          alignSelf: "center",
                         }}
                       >
                         <div>{author.first_name} </div>&nbsp;
@@ -150,21 +158,36 @@ const PostsList = observer(() => {
                   </Card.Header>
                 )}
               </div>
-              <Card.Img
-                variant="top"
-                style={{
-                  height: "300px",
-                  width: "44%",
-                  marginTop: "10px",
-                  marginLeft: "25%",
-                }}
-                src={post.image}
-              />
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                {post.image ? (
+                  <Card.Img
+                    variant="top"
+                    style={{
+                      maxHeight: "50%",
+                      maxWidth: "35%",
+                      width: "auto",
+                    }}
+                    src={post.image}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
               <Card.Body>
                 <Card.Title>{post.title}</Card.Title>
-                <Card.Text>{post.content}</Card.Text>
+                <Card.Text
+                  style={{
+                    display: "-webkit-box",
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {post.content}
+                </Card.Text>
                 <Link to={`/posts/${post.id}`}>
-                  <Button variant="outline-light">Комментарии</Button>
+                  <Button variant="outline-light">Подробнее...</Button>
                 </Link>
               </Card.Body>
             </Card>

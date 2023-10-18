@@ -8,6 +8,8 @@ import { RootStoreContext } from "..";
 import { useNavigate } from "react-router-dom";
 import { Container, Form, Button } from "react-bootstrap";
 import { register } from "../API/userAPI";
+import { loadFile } from "../API/fileAPI";
+import Image from "react-bootstrap/Image";
 const Registration = () => {
   const { userStore } = useContext(RootStoreContext);
   const navigate = useNavigate();
@@ -25,12 +27,7 @@ const Registration = () => {
     const file = event.target.files[0];
     const formData = new FormData();
     formData.append("file", file);
-    axios
-      .post("http://localhost:8000/file", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
+    loadFile(formData)
       .then((response) => {
         console.log("Загрузка прошла успешно", response.data);
         setLoaded(true);
@@ -162,6 +159,17 @@ const Registration = () => {
           </Button>
         </div>
       </Form>
+      <Image
+        style={{
+          flexDirection: "row",
+          maxWidth: "400px",
+          width: "auto",
+          marginBottom: "20px",
+          marginLeft: "10%",
+        }}
+        src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
+        rounded
+      />
     </Container>
   );
 };

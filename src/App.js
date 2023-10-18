@@ -13,10 +13,13 @@ import Post from "./components/Post";
 import AboutPost from "./pages/AboutPost";
 import UsersList from "./components/UsersList";
 import AllUsers from "./pages/AllUsers";
+import { Navigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 function App() {
   return (
     <>
       <BrowserRouter>
+        <Navb />
         <Routes>
           <Route path="/register" element={<Registration />} />
           <Route path="/login" element={<Login />} />
@@ -24,6 +27,10 @@ function App() {
           <Route path="/users/" element={<AllUsers />} />
           <Route path="/posts/" element={<AllPosts />} />
           <Route path="/posts/:id" element={<AboutPost />} />
+          <Route
+            path="/*"
+            element={<Navigate to="/posts" replace />} // Здесь происходит перенаправление
+          />
         </Routes>
       </BrowserRouter>
     </>

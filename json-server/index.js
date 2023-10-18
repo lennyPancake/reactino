@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, "static/images"));
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
+    cb(null, short().new() + file.originalname);
   },
 });
 const upload = multer({ storage });
@@ -27,10 +27,16 @@ function generateToken(user) {
   });
   return token;
 }
+function generateNumericId() {
+  const timestamp = new Date().getTime();
+  const random = Math.floor(Math.random() * 1000);
+  const numericId = parseInt(`${timestamp}${random}`);
+  return numericId;
+}
 // Нужно для небольшой задержки, чтобы запрос проходил не мгновенно, имитация реального апи
 server.use(async (req, res, next) => {
   await new Promise((res) => {
-    setTimeout(res, 800); //hide because use withAuth()
+    setTimeout(res, 800);
   });
   next();
 });
@@ -84,7 +90,7 @@ server.post("/register", (req, res) => {
     }
 
     // Генерируем уникальный ID для нового пользователя (просто для примера, в реальном приложении используйте UUID или другой метод)
-    const id = short();
+    const id = generateNumericId();
     // Создаем нового пользователя
     const newUser = {
       id,
@@ -119,10 +125,7 @@ server.post("/posts", (req, res) => {
       fs.readFileSync(path.resolve(__dirname, "db.json"), "UTF-8")
     );
     const { posts = [] } = db;
-
-    // Генерируем уникальный ID для нового поста (просто для примера, в реальном приложении используйте UUID или другой метод)
-    const newPostId = posts.length + 1;
-    const id = short().new();
+    const id = generateNumericId();
     // Создаем новый пост
     const newPost = {
       id,
@@ -180,9 +183,7 @@ server.post("/comments", (req, res) => {
       fs.readFileSync(path.resolve(__dirname, "db.json"), "UTF-8")
     );
     const { comments = [] } = db;
-
-    // Генерируем уникальный ID для нового комментария (просто для примера, в реальном приложении используйте short или другой метод)
-    const newCommentId = shortv4();
+    const newCommentId = generateNumericId();
 
     // Создаем новый комментарий
     const newComment = {
@@ -211,14 +212,14 @@ server.post("/comments", (req, res) => {
 });
 server.delete("/posts/:id", (req, res) => {
   try {
-    const postId = parseInt(req.params.id);
+    const postId = req.params.id;
     const db = JSON.parse(
       fs.readFileSync(path.resolve(__dirname, "db.json"), "UTF-8")
     );
-    const { posts = [] } = db;
+    const { posts = [], comments = [] } = db;
 
     // Находим индекс поста, который нужно удалить
-    const postIndex = posts.findIndex((post) => post.id === postId);
+    const postIndex = posts.findIndex((post) => post.id == postId);
 
     if (postIndex === -1) {
       return res.status(404).json({ message: "Post not found" });
@@ -231,14 +232,21 @@ server.delete("/posts/:id", (req, res) => {
       "images",
       posts[postIndex].image.replace("http://localhost:8000/images/", "")
     );
-
-    // Удаляем изображение с сервера
-    fs.unlinkSync(imagePath);
+    if (posts[postIndex].image !== "") {
+      fs.unlinkSync(imagePath);
+    }
 
     // Удаляем пост из массива
     posts.splice(postIndex, 1);
 
-    // Обновляем базу данных
+    // Удаляем все комментарии связанные с этим постом
+    const updatedComments = comments.filter(
+      (comment) => comment.postId !== postId
+    );
+
+    // Обновляем базу данных с обновленными данными
+    db.comments = updatedComments;
+
     fs.writeFileSync(
       path.resolve(__dirname, "db.json"),
       JSON.stringify(db, null, 2),

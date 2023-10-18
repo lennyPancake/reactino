@@ -2,10 +2,9 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import axios from "axios";
 import { useContext, useEffect } from "react";
 import { RootStoreContext } from "..";
-import "../index.css";
+import { loadFile } from "../API/fileAPI";
 
 const EditPostModal = ({ show, onClose, editPostData }) => {
   const [loaded, setLoaded] = useState(false);
@@ -16,32 +15,27 @@ const EditPostModal = ({ show, onClose, editPostData }) => {
   }, [editPostData]);
 
   const handleEditPost = () => {
-    // Проверяем, что все необходимые поля заполнены
-    if (!postData.title || !postData.content || !postData.image) {
-      alert("Заполните все поля");
-      console.log("image:", postData.image);
-      return;
+    if (
+      postData.title === editPostData.title &&
+      postData.content === editPostData.content &&
+      postData.image === editPostData.image
+    ) {
+      onClose();
+    } else {
+      postStore.updatePostByData(postData);
+      onClose();
     }
-    postStore.updatePostByData(postData);
-    onClose();
   };
-  console.log("show:", editPostData);
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setPostData({ ...postData, [name]: value });
-    console.log("Имя", name);
-    console.log("value", value);
   };
+
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     const formData = new FormData();
     formData.append("file", file);
-    axios
-      .post("http://localhost:8000/file", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
+    loadFile(formData)
       .then((response) => {
         console.log("Загрузка прошла успешно", response.data);
         setLoaded(true);
@@ -77,9 +71,16 @@ const EditPostModal = ({ show, onClose, editPostData }) => {
                   onChange={handleImageChange}
                   className="mt-3"
                 />
+                {loaded && postData.image ? (
+                  <div style={{ color: "green" }}>
+                    Изображение успешно загружено
+                  </div>
+                ) : (
+                  ""
+                )}
               </Form.Group>
               <Form.Group
-                className=" mb-3"
+                className="mb-3"
                 controlId="exampleForm.ControlInput1"
               >
                 <Form.Label>Название поста:</Form.Label>

@@ -62,7 +62,7 @@ const Login = () => {
         </Form.Group>
 
         <div className="reg">
-          <a href="/register">Зарегистрироваться</a>
+          Новый пользователь? <a href="/register">Зарегистрироваться</a>
         </div>
 
         <div className="d-flex justify-content-end">

@@ -1,15 +1,10 @@
 import React, { useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { RootStoreContext } from "..";
 import { Card } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Image from "react-bootstrap/Image";
-import { Link } from "react-router-dom";
-import AddComment from "./AddComment";
 import LoadingSpinner from "./LoadingSpinner";
-
 const Comments = observer((postId) => {
   const { commentStore, userStore } = useContext(RootStoreContext);
 
@@ -31,32 +26,34 @@ const Comments = observer((postId) => {
                   }}
                 >
                   <Card.Header>
-                    <Col xs={2} md={1} style={{ width: "auto" }}>
-                      <Image
-                        style={{
-                          width: "30px",
-                          height: "30px",
-                          marginRight: "10px",
-                        }}
-                        src={
+                    <div className="d-flex">
+                      <Col xs={2} md={1} style={{ width: "auto" }}>
+                        <Image
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            marginRight: "10px",
+                          }}
+                          src={
+                            userStore.users.find(
+                              (user) => user.id === comment.authorId
+                            ).avatar
+                          }
+                          roundedCircle
+                        />
+                      </Col>
+                      <div>
+                        {
                           userStore.users.find(
                             (user) => user.id === comment.authorId
-                          ).avatar
+                          ).first_name
+                        }{" "}
+                        {
+                          userStore.users.find(
+                            (user) => user.id === comment.authorId
+                          ).last_name
                         }
-                        roundedCircle
-                      />
-                    </Col>
-                    <div>
-                      {
-                        userStore.users.find(
-                          (user) => user.id === comment.authorId
-                        ).first_name
-                      }{" "}
-                      {
-                        userStore.users.find(
-                          (user) => user.id === comment.authorId
-                        ).last_name
-                      }
+                      </div>
                     </div>
                   </Card.Header>
                   <Card.Body>
@@ -67,7 +64,7 @@ const Comments = observer((postId) => {
                 </Card>
               ))
             ) : (
-              <div>Здесь пока пусто:(</div>
+              <h5>Здесь пока нет комментариев :(</h5>
             )}
           </div>{" "}
         </div>

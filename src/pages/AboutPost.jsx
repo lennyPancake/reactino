@@ -10,7 +10,6 @@ const AboutPost = () => {
 
   return (
     <div>
-      <Navb />
       <Post postId={id} />
     </div>
   );

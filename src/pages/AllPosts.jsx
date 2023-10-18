@@ -12,8 +12,14 @@ const AllPosts = () => {
     postStore.getPosts();
   }, []);
   return (
-    <div style={{ display: "flex", height: "auto", background: "#212529" }}>
-      <Navb />
+    <div
+      style={{
+        width: "100%",
+        display: "flex",
+        height: "auto",
+        background: "#212529",
+      }}
+    >
       <PostsList />
     </div>
   );

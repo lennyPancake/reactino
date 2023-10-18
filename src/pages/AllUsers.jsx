@@ -13,10 +13,10 @@ const AllUsers = () => {
       : console.log("идет загрузка");
   }, []);
   return (
-    <div>
-      <Navb />
+    <>
+      <h1 style={{ marginLeft: "310px" }}>Список Блогов</h1>
       <UsersList />
-    </div>
+    </>
   );
 };
 

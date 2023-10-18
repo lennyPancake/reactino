@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import { Form, Button } from "react-bootstrap";
-import { observer } from "mobx-react-lite";
 import { RootStoreContext } from "..";
 
 const AddComment = ({ postId }) => {

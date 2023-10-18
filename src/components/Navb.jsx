@@ -1,22 +1,29 @@
 import React from "react";
-import { Container, Nav } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import MainUser from "./MainUser";
 import { Navbar, Image } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 import "./Navbb.css";
-
+import { useLocation } from "react-router-dom";
 const linkStyle = {
   textDecoration: "none",
-  color: "white",
+  color: "red",
   flexDirection: "column",
 };
 
 const Navb = () => {
-  let id = 1;
+  let id = undefined;
   if (sessionStorage.getItem("mainUser")) {
     id = JSON.parse(sessionStorage.getItem("mainUser")).id;
   }
-
+  const location = useLocation();
+  const hideNavbar = ["/register", "/login"].includes(location.pathname);
+  const isNavLinkActive = (path) => {
+    return location.pathname === path ? "active-link" : "";
+  };
+  if (hideNavbar) {
+    return null;
+  }
   return (
     <div
       style={{
@@ -35,26 +42,38 @@ const Navb = () => {
         src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
         rounded
       />
-      <Navbar className="bg-212529">
+      <Navbar style={{ marginTop: "25" }} className="bg-212529">
         <Container className="bg-212529">
           <Link to="/posts" style={linkStyle}>
-            <Navbar.Brand className="bg-212529 mx-auto">Все посты</Navbar.Brand>
+            <Navbar.Brand
+              className={`bg-212529 mx-auto ${isNavLinkActive("/posts")}`}
+            >
+              Все посты
+            </Navbar.Brand>
           </Link>
         </Container>
       </Navbar>
       <br />
       <Navbar className="bg-212529">
         <Container className="bg-212529">
-          <Link to={`/users/${id}`} style={linkStyle}>
-            <Navbar.Brand className="bg-212529 mx-auto">Мой блог</Navbar.Brand>
+          <Link to={`/users/${id}`} className="my-blog-link" style={linkStyle}>
+            <Navbar.Brand
+              className={`bg-212529 mx-auto ${isNavLinkActive(`/users/${id}`)}`}
+            >
+              Мой блог
+            </Navbar.Brand>
           </Link>
         </Container>
       </Navbar>
       <br />
       <Navbar className="bg-212529">
         <Container className="bg-212529">
-          <Link to="/users" style={linkStyle}>
-            <Navbar.Brand className="bg-212529 mx-auto">Все блоги</Navbar.Brand>
+          <Link to="/users" className="all-blogs-link" style={linkStyle}>
+            <Navbar.Brand
+              className={`bg-212529 mx-auto ${isNavLinkActive("/users")}`}
+            >
+              Все блоги
+            </Navbar.Brand>
           </Link>
         </Container>
       </Navbar>

@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { RootStoreContext } from "..";
 import { Card } from "react-bootstrap";
@@ -18,7 +17,7 @@ const Post = observer((props) => {
     postStore.getPostById(postId);
     userStore.fetchUsers();
     commentStore.getCommentsForPost(postId);
-  }, [postId, userStore, postStore, commentStore]);
+  }, []);
 
   const post = postStore.post;
   const author = userStore.users.find((user) => user.id === post.authorId);
@@ -54,12 +53,22 @@ const Post = observer((props) => {
                 </div>
               </Card.Header>
             )}
-
-            <Card.Img
-              variant="top"
-              style={{ width: "44%", marginTop: "10px", marginLeft: "25%" }}
-              src="http://localhost:8000/images/night.jpg"
-            />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              {post.image ? (
+                <Card.Img
+                  variant="top"
+                  style={{
+                    maxHeight: "50%",
+                    maxWidth: "60%",
+                    width: "auto",
+                    margin: "5%",
+                  }}
+                  src={post.image}
+                />
+              ) : (
+                ""
+              )}
+            </div>
             <Card.Body>
               <Card.Title>{post.title}</Card.Title>
               <Card.Text>{post.content}</Card.Text>
@@ -72,7 +81,6 @@ const Post = observer((props) => {
       ) : (
         <LoadingSpinner />
       )}
-      {/* Выводим комментарии */}
       {<Comments postId={postId} />}
       <AddComment postId={postId} />{" "}
     </div>

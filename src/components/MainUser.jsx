@@ -11,8 +11,10 @@ const MainUser = () => {
   const { userStore } = useContext(RootStoreContext);
 
   userStore.mainUser = JSON.parse(sessionStorage.getItem("mainUser"));
-
-  console.log("объект пользователя", userStore.mainUser);
+  if (sessionStorage.length == 0) {
+    navigate("/login");
+    return "";
+  }
   return (
     <SplitButton
       onClick={() => {
@@ -37,7 +39,7 @@ const MainUser = () => {
       variant="outline-secondary"
       style={{
         display: "flex",
-        marginTop: "33%",
+        marginTop: "25%",
         marginLeft: "20px",
         position: "fixed",
         color: "white",

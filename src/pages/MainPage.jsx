@@ -1,13 +1,9 @@
 import React, { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import jwt_decode from "jwt-decode";
 import withAuth from "../components/withAuth";
-import { observer } from "mobx-react-lite";
 import Navb from "../components/Navb";
 import { RootStoreContext } from "../index";
-import Registration from "../components/Registration";
 import PostsList from "../components/PostsList";
-import MainUser from "../components/MainUser";
 import AddPostModal from "../components/AddPostModal";
 const MainPage = () => {
   const { id } = useParams();
@@ -17,7 +13,6 @@ const MainPage = () => {
   useEffect(() => {
     userStore.fetchUsers();
     postStore.getPostsFromUserId(id);
-    postStore.loaded = true;
   }, []);
   if (sessionStorage.getItem("mainUser")) {
     mainUserId = JSON.parse(sessionStorage.getItem("mainUser")).id;
@@ -34,7 +29,6 @@ const MainPage = () => {
         flexWrap: "wrap",
       }}
     >
-      <Navb />
       {id == mainUserId ? (
         <AddPostModal
           showButton={true}

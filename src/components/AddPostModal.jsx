@@ -2,10 +2,10 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import axios from "axios";
 import { useContext } from "react";
 import { RootStoreContext } from "..";
 import "../index.css";
+import { loadFile } from "../API/fileAPI";
 
 function AddPostModal() {
   const [show, setShow] = useState(false);
@@ -20,25 +20,21 @@ function AddPostModal() {
     image: "",
   });
   const handleCreatePost = () => {
-    // Проверяем, что все необходимые поля заполнены
-    if (!postData.title || !postData.content || !postData.image) {
-      alert("Заполните все поля");
-      console.log("image:", postData.image);
+    if (!postData.title || !postData.content) {
+      alert("Заполните название и содержимое поста!");
       return;
     }
-
-    // Отправляем POST-запрос на сервер для создания поста
     postStore
       .createPostByData(postData)
       .then((response) => {
         console.log("Пост успешно создан", response.data);
-        // Очищаем данные формы после успешной отправки
         setPostData({
           title: "",
           content: "",
           authorId: JSON.parse(sessionStorage.getItem("mainUser")).id,
           image: "",
         });
+        setLoaded(true);
       })
       .catch((error) => {
         console.error("Ошибка при создании поста", error);
@@ -51,19 +47,12 @@ function AddPostModal() {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setPostData({ ...postData, [name]: value });
-    console.log("Имя", name);
-    console.log("value", value);
   };
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     const formData = new FormData();
     formData.append("file", file);
-    axios
-      .post("http://localhost:8000/file", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
+    loadFile(formData)
       .then((response) => {
         console.log("Загрузка прошла успешно", response.data);
         setLoaded(true);
@@ -108,6 +97,13 @@ function AddPostModal() {
                   onChange={handleImageChange}
                   className="mt-3"
                 />
+                {loaded && postData.image ? (
+                  <div style={{ color: "green" }}>
+                    Изображение успешно загружено
+                  </div>
+                ) : (
+                  ""
+                )}
               </Form.Group>
               <Form.Group
                 className=" mb-3"

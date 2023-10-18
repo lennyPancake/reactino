@@ -9,7 +9,6 @@ import LoadingSpinner from "./LoadingSpinner";
 
 const UsersList = observer(() => {
   const { userStore } = useContext(RootStoreContext);
-  //console.log("qq", userStore.users[0].id);
   const navigate = useNavigate();
   if (userStore.isLoading) {
     return (
@@ -21,26 +20,31 @@ const UsersList = observer(() => {
   }
   return (
     <div style={{ marginLeft: "310px" }} className="ml-3">
-      <h1>Список Блогов</h1>
       <ListGroup className="bg-dark">
         {userStore.users.map((user) => (
           <div>
             <ListGroup.Item
               key={user.id}
               className=" border-dark bg-secondary bg-opacity-10 d-flex align-items-center"
+              style={{ height: "100px" }}
             >
               <Image
                 src={user.avatar}
                 alt="Аватар"
                 rounded
-                style={{ width: "100px", height: "100px", marginRight: "10px" }}
+                style={{
+                  maxWidth: "90px",
+                  maxHeight: "90px",
+                  width: "auto",
+                  marginRight: "10px",
+                }}
               />
               <div style={{ width: "30%" }}>
                 <h5>
                   {user.first_name} {user.last_name}
                 </h5>
                 <p>Email: {user.email}</p>
-                <p>ID: {user.id}</p>
+                {/*<p>ID: {user.id}</p>*/}
               </div>
               <div
                 style={{ width: "100%" }}
