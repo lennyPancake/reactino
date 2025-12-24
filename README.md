@@ -40,6 +40,6 @@
 <img width="1910" height="987" alt="image" src="https://github.com/user-attachments/assets/071464ed-0f9d-4737-a80d-596a2d3791d2" />
 
 ---
-<code>git clone https://github.com/lennyPancake/reactino</code>
-<code>npm install</code>
-<code>npm run dev</code>
+<code>git clone https://github.com/lennyPancake/reactino</code><br/>
+<code>npm install</code><br/>
+<code>npm run dev</code><br/>
