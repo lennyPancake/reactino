@@ -1,24 +1,19 @@
-import React, { useEffect } from "react";
-import { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { RootStoreContext } from "..";
 import PostsList from "../components/PostsList";
 import withAuth from "../components/withAuth";
+import "./Pages.css";
 
 const AllPosts = () => {
   const { userStore, postStore } = useContext(RootStoreContext);
+
   useEffect(() => {
     userStore.fetchUsers();
     postStore.getPosts();
-  }, []);
+  }, [userStore, postStore]);
+
   return (
-    <div
-      style={{
-        width: "100%",
-        display: "flex",
-        height: "auto",
-        background: "#212529",
-      }}
-    >
+    <div className="page-wrapper">
       <PostsList />
     </div>
   );

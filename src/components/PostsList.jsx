@@ -1,198 +1,89 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useState, useMemo, useCallback } from "react";
 import { observer } from "mobx-react-lite";
-import { RootStoreContext } from "..";
-import { Card } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Image from "react-bootstrap/Image";
-import { Link } from "react-router-dom";
-import Dropdown from "react-bootstrap/Dropdown";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { RootStoreContext } from "..";
+import PostCard from "./PostCard";
 import EditPostModal from "./EditPostModal";
 import LoadingSpinner from "./LoadingSpinner";
+import "./PostsList.css";
+
 const PostsList = observer(() => {
   const navigate = useNavigate();
   const { userStore, postStore } = useContext(RootStoreContext);
-  let mainUserId = undefined;
-  if (sessionStorage.length == 0) {
-    navigate("/login");
-  } else {
-    mainUserId = JSON.parse(sessionStorage.getItem("mainUser")).id;
-  }
   const [showModal, setShowModal] = useState(false);
   const [editPostData, setEditPostData] = useState({});
-  const handleDeletePost = (postId) => {
-    postStore.deletePostById(postId);
-  };
+
+  const mainUserId = useMemo(() => {
+    const stored = sessionStorage.getItem("mainUser");
+    if (!stored) {
+      navigate("/login");
+      return null;
+    }
+    return JSON.parse(stored).id;
+  }, [navigate]);
+
+  const handleDeletePost = useCallback((postId) => {
+    if (window.confirm("Вы уверены, что хотите удалить этот пост?")) {
+      postStore.deletePostById(postId);
+    }
+  }, [postStore]);
+
+  const handleEditPost = useCallback((post) => {
+    setEditPostData(post);
+    setShowModal(true);
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setShowModal(false);
+    setEditPostData({});
+  }, []);
 
   if (postStore.isLoading) {
     return (
-      <div style={{ marginLeft: "250px", width: "80%" }}>
-        {" "}
-        <LoadingSpinner />;
+      <div className="posts-container">
+        <LoadingSpinner />
       </div>
     );
-  } else {
-    if (postStore.posts.length == 0) {
-      return (
-        <div
-          style={{
-            fontSize: "22px",
-            width: "100%",
-            textAlign: "center",
-            marginLeft: "0",
-          }}
-        >
-          Здесь пока пусто :(
+  }
+
+  if (postStore.posts.length === 0) {
+    return (
+      <div className="posts-container">
+        <div className="posts-empty">
+          <h3>Здесь пока пусто</h3>
+          <p>Посты скоро появятся!</p>
         </div>
-      );
-    }
+      </div>
+    );
   }
 
   return (
     <>
       <EditPostModal
         show={showModal}
-        onClose={() => {
-          setShowModal(false);
-        }}
+        onClose={handleCloseModal}
         editPostData={editPostData}
       />
-      <div style={{ width: "100%", marginLeft: "310px" }}>
-        {postStore.posts.map((post) => {
-          const author = userStore.users.find(
-            (user) => user.id === post.authorId
-          );
+      
+      <div className="posts-container">
+        <div className="posts-grid">
+          {postStore.posts.map((post) => {
+            const author = userStore.users.find(
+              (user) => user.id === post.authorId
+            );
 
-          return (
-            <Card
-              key={post.id}
-              style={{
-                color: "white",
-                backgroundColor: "#3f4653",
-                height: "auto",
-                maxWidth: "100%",
-                marginLeft: "10px",
-                width: "80%",
-                maxHeight: "none",
-                marginTop: "10px",
-              }}
-            >
-              <div className="mb-2">
-                {author && (
-                  <Card.Header
-                    style={{
-                      marginTop: "0",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div className="d-flex mt-0">
-                      <Col
-                        xs={2}
-                        md={1}
-                        style={{ marginTop: "0", width: "auto" }}
-                      >
-                        <Image
-                          style={{
-                            maxWidth: "35px",
-                            maxHeight: "35px",
-                            width: "auto",
-                            marginRight: "10px",
-                            marginTop: "0",
-                          }}
-                          src={author.avatar}
-                          roundedCircle
-                        />
-                      </Col>
-                      <div
-                        style={{
-                          justifyContent: "center",
-                          display: "flex",
-                          flexWrap: "nowrap",
-                          alignSelf: "center",
-                        }}
-                      >
-                        <div>{author.first_name} </div>&nbsp;
-                        <div>{author.last_name}</div>
-                      </div>
-                    </div>
-
-                    <div
-                      style={{ marginTop: "0", width: "80%" }}
-                      className="d-flex justify-content-end"
-                    >
-                      {mainUserId == author.id ? (
-                        <Dropdown
-                          style={{
-                            marginTop: "0",
-                          }}
-                        >
-                          <Dropdown.Toggle
-                            variant="secondary"
-                            id="dropdown-basic"
-                          ></Dropdown.Toggle>
-
-                          <Dropdown.Menu>
-                            <Dropdown.Item
-                              onClick={() => {
-                                setEditPostData(post);
-                                setShowModal(true);
-                              }}
-                            >
-                              Изменить
-                            </Dropdown.Item>
-                            <Dropdown.Item
-                              onClick={() => handleDeletePost(post.id)}
-                            >
-                              Удалить
-                            </Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  </Card.Header>
-                )}
-              </div>
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                {post.image ? (
-                  <Card.Img
-                    variant="top"
-                    style={{
-                      maxHeight: "50%",
-                      maxWidth: "35%",
-                      width: "auto",
-                    }}
-                    src={post.image}
-                  />
-                ) : (
-                  ""
-                )}
-              </div>
-              <Card.Body>
-                <Card.Title>{post.title}</Card.Title>
-                <Card.Text
-                  style={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 3,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {post.content}
-                </Card.Text>
-                <Link to={`/posts/${post.id}`}>
-                  <Button variant="outline-light">Подробнее...</Button>
-                </Link>
-              </Card.Body>
-            </Card>
-          );
-        })}
+            return (
+              <PostCard
+                key={post.id}
+                post={post}
+                author={author}
+                isOwner={mainUserId === author?.id}
+                onEdit={handleEditPost}
+                onDelete={handleDeletePost}
+              />
+            );
+          })}
+        </div>
       </div>
     </>
   );

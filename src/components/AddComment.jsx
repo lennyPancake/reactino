@@ -1,43 +1,62 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import { Form, Button } from "react-bootstrap";
 import { RootStoreContext } from "..";
+import "./AddComment.css";
 
 const AddComment = ({ postId }) => {
   const [text, setText] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { commentStore } = useContext(RootStoreContext);
-  const mainUserId = JSON.parse(sessionStorage.getItem("mainUser")).id;
-  const handleAddComment = async (e) => {
+
+  const mainUserId = JSON.parse(sessionStorage.getItem("mainUser"))?.id;
+
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
-    if (text.trim() === "") {
-      return;
-    }
+    
+    if (text.trim() === "" || isSubmitting) return;
+
+    setIsSubmitting(true);
+    
     const newComment = {
-      text: text,
-      postId: postId,
+      text: text.trim(),
+      postId,
       authorId: mainUserId,
       id: Date.now(),
     };
-    await commentStore.addComment(newComment);
-    setText("");
-  };
+
+    try {
+      await commentStore.addComment(newComment);
+      setText("");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [text, postId, mainUserId, commentStore, isSubmitting]);
 
   return (
-    <div style={{ height: "200px", marginLeft: "310px" }}>
-      <h4>Добавить комментарий</h4>
-      <Form style={{ width: "40%" }} onSubmit={handleAddComment}>
+    <div className="add-comment-section">
+      <h4 className="add-comment-title">Добавить комментарий</h4>
+      <Form onSubmit={handleSubmit} className="add-comment-form">
         <Form.Group controlId="commentText">
           <Form.Control
-            className="bg-muted"
             as="textarea"
             rows={3}
-            placeholder="Введите комментарий"
+            placeholder="Напишите ваш комментарий..."
             value={text}
             onChange={(e) => setText(e.target.value)}
+            className="comment-textarea"
+            disabled={isSubmitting}
           />
         </Form.Group>
-        <Button className="mt-2" type="submit" variant="success">
-          Добавить комментарий
-        </Button>
+        <div className="add-comment-actions">
+          <Button 
+            type="submit" 
+            variant="success"
+            className="btn-custom"
+            disabled={!text.trim() || isSubmitting}
+          >
+            {isSubmitting ? "Отправка..." : "Отправить"}
+          </Button>
+        </div>
       </Form>
     </div>
   );

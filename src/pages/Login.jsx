@@ -1,81 +1,108 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useContext, useCallback } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { RootStoreContext } from "..";
-import { useContext } from "react";
-import { Form, Button, Container, Image } from "react-bootstrap";
-import "../pages/Login.css";
+import { Form, Button, Image } from "react-bootstrap";
 import { login } from "../API/userAPI";
+import "./Auth.css";
+
 const Login = () => {
-  const [logIn, setLogIn] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const { userStore } = useContext(RootStoreContext);
-  const [pass, setPass] = useState("");
   const navigate = useNavigate();
-  const handleLogin = async () => {
+
+  const handleLogin = useCallback(async (e) => {
+    e.preventDefault();
+    
+    if (!email.trim() || !password.trim()) {
+      setError("Заполните все поля");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+
     try {
-      const response = await login(logIn, pass);
-      console.log("ответ на авторизацию : ", response);
+      const response = await login(email, password);
       const { user, token } = response.data;
+      
       localStorage.setItem("token", token);
       userStore.mainUser = user;
-      sessionStorage.setItem("mainUser", JSON.stringify(userStore.mainUser));
-      navigate("/users/" + user.id);
+      sessionStorage.setItem("mainUser", JSON.stringify(user));
+      
+      navigate(`/users/${user.id}`);
     } catch (error) {
-      if (error.response && error.response.status === 403) {
-        alert("Неверный логин или пароль");
+      if (error.response?.status === 403) {
+        setError("Неверный логин или пароль");
       } else {
-        console.error("Произошла ошибка при авторизации:", error);
+        setError("Произошла ошибка при авторизации");
+        console.error("Ошибка авторизации:", error);
       }
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [email, password, userStore, navigate]);
 
   return (
-    <Container
-      style={{ width: "35%" }}
-      className="border bg-dark login-container"
-    >
-      <div className="text-center">
-        <Image
-          style={{ width: "250px", marginBottom: "20px" }}
-          src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
-          rounded
-        />
-      </div>
-      <Form className="bg-dark">
-        <h2 className="login-title">Вход</h2>
-        <Form.Group controlId="formBasicEmail">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Введите ваш email"
-            value={logIn}
-            onChange={(event) => setLogIn(event.target.value)}
+    <div className="auth-container">
+      <div className="auth-card fade-in">
+        <div className="auth-logo">
+          <Image
+            src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
+            rounded
+            alt="Logo"
+            className="logo-image"
           />
-        </Form.Group>
-        <Form.Group controlId="formBasicPassword">
-          <Form.Label>Пароль</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Введите ваш пароль"
-            value={pass}
-            onChange={(event) => setPass(event.target.value)}
-          />
-        </Form.Group>
-
-        <div className="reg">
-          Новый пользователь? <a href="/register">Зарегистрироваться</a>
         </div>
 
-        <div className="d-flex justify-content-end">
+        <h1 className="auth-title">Вход</h1>
+
+        {error && (
+          <div className="auth-error">
+            {error}
+          </div>
+        )}
+
+        <Form onSubmit={handleLogin} className="auth-form">
+          <Form.Group className="mb-3">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Введите email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoFocus
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-4">
+            <Form.Label>Пароль</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Введите пароль"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Form.Group>
+
           <Button
-            className="me-10 mt-5 "
+            type="submit"
             variant="primary"
-            onClick={handleLogin}
+            className="auth-submit-btn"
+            disabled={isLoading}
           >
-            Войти
+            {isLoading ? "Вход..." : "Войти"}
           </Button>
+        </Form>
+
+        <div className="auth-footer">
+          <span>Нет аккаунта?</span>
+          <Link to="/register">Зарегистрироваться</Link>
         </div>
-      </Form>
-    </Container>
+      </div>
+    </div>
   );
 };
 

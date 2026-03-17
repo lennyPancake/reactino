@@ -1,0 +1,13 @@
+/* Common Page Styles */
+.page-wrapper {
+  min-height: 100vh;
+  background-color: var(--color-bg-primary);
+}
+
+.page-title {
+  margin-left: var(--sidebar-width);
+  padding: var(--spacing-lg) var(--spacing-lg) 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}

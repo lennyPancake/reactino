@@ -1,75 +1,67 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useMemo } from "react";
 import { observer } from "mobx-react-lite";
 import { RootStoreContext } from "..";
-import { Card } from "react-bootstrap";
-import Col from "react-bootstrap/Col";
-import Image from "react-bootstrap/Image";
+import { Card, Image } from "react-bootstrap";
 import LoadingSpinner from "./LoadingSpinner";
-const Comments = observer((postId) => {
-  const { commentStore, userStore } = useContext(RootStoreContext);
+import "./Comments.css";
+
+const CommentCard = ({ comment, author }) => {
+  if (!author) return null;
 
   return (
-    <div>
-      {!commentStore.isLoading ? (
-        <div style={{ marginLeft: "310px" }}>
-          <div style={{ marginTop: "20px" }}>
-            <h3>Комментарии</h3>
-            {commentStore.comments.length > 0 ? (
-              commentStore.comments.map((comment) => (
-                <Card
-                  key={comment.id}
-                  style={{
-                    backgroundColor: "#3f4653",
-                    width: "80%",
-                    marginLeft: "10px",
-                    marginTop: "10px",
-                  }}
-                >
-                  <Card.Header>
-                    <div className="d-flex">
-                      <Col xs={2} md={1} style={{ width: "auto" }}>
-                        <Image
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            marginRight: "10px",
-                          }}
-                          src={
-                            userStore.users.find(
-                              (user) => user.id === comment.authorId
-                            ).avatar
-                          }
-                          roundedCircle
-                        />
-                      </Col>
-                      <div>
-                        {
-                          userStore.users.find(
-                            (user) => user.id === comment.authorId
-                          ).first_name
-                        }{" "}
-                        {
-                          userStore.users.find(
-                            (user) => user.id === comment.authorId
-                          ).last_name
-                        }
-                      </div>
-                    </div>
-                  </Card.Header>
-                  <Card.Body>
-                    <Card.Text style={{ color: "white" }}>
-                      {comment.text}
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              ))
-            ) : (
-              <h5>Здесь пока нет комментариев :(</h5>
-            )}
-          </div>{" "}
+    <Card className="comment-card stagger-item">
+      <Card.Header className="comment-header">
+        <div className="comment-author">
+          <Image
+            src={author.avatar}
+            className="avatar avatar-sm"
+            alt={`${author.first_name} ${author.last_name}`}
+          />
+          <span className="author-name">
+            {author.first_name} {author.last_name}
+          </span>
+        </div>
+      </Card.Header>
+      <Card.Body className="comment-body">
+        <Card.Text className="comment-text">{comment.text}</Card.Text>
+      </Card.Body>
+    </Card>
+  );
+};
+
+const Comments = observer(({ postId }) => {
+  const { commentStore, userStore } = useContext(RootStoreContext);
+
+  const commentsWithAuthors = useMemo(() => {
+    return commentStore.comments.map((comment) => ({
+      comment,
+      author: userStore.users.find((user) => user.id === comment.authorId),
+    }));
+  }, [commentStore.comments, userStore.users]);
+
+  if (commentStore.isLoading) {
+    return <LoadingSpinner fullPage={false} />;
+  }
+
+  return (
+    <div className="comments-section">
+      <h3 className="comments-title">
+        Комментарии
+        {commentsWithAuthors.length > 0 && (
+          <span className="comments-count">({commentsWithAuthors.length})</span>
+        )}
+      </h3>
+
+      {commentsWithAuthors.length > 0 ? (
+        <div className="comments-list">
+          {commentsWithAuthors.map(({ comment, author }) => (
+            <CommentCard key={comment.id} comment={comment} author={author} />
+          ))}
         </div>
       ) : (
-        <LoadingSpinner />
+        <div className="comments-empty">
+          <p>Здесь пока нет комментариев. Будьте первым!</p>
+        </div>
       )}
     </div>
   );

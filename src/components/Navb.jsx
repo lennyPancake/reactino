@@ -1,87 +1,73 @@
-import React from "react";
-import { Container } from "react-bootstrap";
+import React, { useMemo } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Image } from "react-bootstrap";
 import MainUser from "./MainUser";
-import { Navbar, Image } from "react-bootstrap";
-import { Link, redirect } from "react-router-dom";
 import "./Navbb.css";
-import { useLocation } from "react-router-dom";
-const linkStyle = {
-  textDecoration: "none",
-  color: "red",
-  flexDirection: "column",
-};
+
+const NAV_ITEMS = [
+  { path: "/posts", label: "Все посты", icon: "posts" },
+  { path: "/users", label: "Все блоги", icon: "users", exact: true },
+];
+
+const NavLink = ({ to, label, isActive }) => (
+  <Link to={to} className={`nav-link-custom ${isActive ? "active" : ""}`}>
+    <span className="nav-link-text">{label}</span>
+  </Link>
+);
 
 const Navb = () => {
-  let id = undefined;
-  if (sessionStorage.getItem("mainUser")) {
-    id = JSON.parse(sessionStorage.getItem("mainUser")).id;
-  }
   const location = useLocation();
+  
+  const mainUserId = useMemo(() => {
+    const stored = sessionStorage.getItem("mainUser");
+    return stored ? JSON.parse(stored).id : null;
+  }, []);
+
   const hideNavbar = ["/register", "/login"].includes(location.pathname);
-  const isNavLinkActive = (path) => {
-    return location.pathname === path ? "active-link" : "";
+
+  const isActive = (path, exact = false) => {
+    if (exact) return location.pathname === path;
+    return location.pathname.startsWith(path);
   };
-  if (hideNavbar) {
-    return null;
-  }
+
+  if (hideNavbar) return null;
+
   return (
-    <div
-      style={{
-        width: "300px",
-        textAlign: "center",
-        height: "100vh",
-        position: "fixed",
-        borderRight: "1px gray solid",
-        paddingTop: "50px",
-        marginRight: "100px",
-      }}
-      className="bg-212529"
-    >
-      <Image
-        style={{ width: "250px", marginBottom: "20px" }}
-        src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
-        rounded
-      />
-      <Navbar style={{ marginTop: "25" }} className="bg-212529">
-        <Container className="bg-212529">
-          <Link to="/posts" style={linkStyle}>
-            <Navbar.Brand
-              className={`bg-212529 mx-auto ${isNavLinkActive("/posts")}`}
-            >
-              Все посты
-            </Navbar.Brand>
-          </Link>
-        </Container>
-      </Navbar>
-      <br />
-      <Navbar className="bg-212529">
-        <Container className="bg-212529">
-          <Link to={`/users/${id}`} className="my-blog-link" style={linkStyle}>
-            <Navbar.Brand
-              className={`bg-212529 mx-auto ${isNavLinkActive(`/users/${id}`)}`}
-            >
-              Мой блог
-            </Navbar.Brand>
-          </Link>
-        </Container>
-      </Navbar>
-      <br />
-      <Navbar className="bg-212529">
-        <Container className="bg-212529">
-          <Link to="/users" className="all-blogs-link" style={linkStyle}>
-            <Navbar.Brand
-              className={`bg-212529 mx-auto ${isNavLinkActive("/users")}`}
-            >
-              Все блоги
-            </Navbar.Brand>
-          </Link>
-        </Container>
-      </Navbar>
-      <br />
-      <Navbar className="">
-        <MainUser />
-      </Navbar>
-    </div>
+    <aside className="sidebar">
+      <div className="sidebar-content">
+        <div className="sidebar-logo">
+          <Image
+            src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
+            rounded
+            className="logo-image"
+            alt="Logo"
+          />
+        </div>
+
+        <nav className="sidebar-nav">
+          {NAV_ITEMS.map(({ path, label, exact }) => (
+            <NavLink
+              key={path}
+              to={path}
+              label={label}
+              isActive={isActive(path, exact)}
+            />
+          ))}
+          
+          {mainUserId && (
+            <NavLink
+              to={`/users/${mainUserId}`}
+              label="Мой блог"
+              isActive={location.pathname === `/users/${mainUserId}`}
+            />
+          )}
+        </nav>
+
+        <div className="sidebar-footer">
+          <MainUser />
+        </div>
+      </div>
+    </aside>
   );
 };
 

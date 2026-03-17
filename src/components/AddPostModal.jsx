@@ -1,155 +1,144 @@
-import { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
-import { useContext } from "react";
+import React, { useState, useContext, useCallback } from "react";
+import { Button, Form, Modal } from "react-bootstrap";
 import { RootStoreContext } from "..";
-import "../index.css";
 import { loadFile } from "../API/fileAPI";
+import "./PostModal.css";
 
-function AddPostModal() {
+const INITIAL_POST_DATA = {
+  title: "",
+  content: "",
+  image: "",
+};
+
+const AddPostModal = () => {
   const [show, setShow] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const { postStore } = useContext(RootStoreContext);
-  const [postData, setPostData] = useState({
-    title: "",
-    content: "",
-    authorId: JSON.parse(sessionStorage.getItem("mainUser")).id,
-    image: "",
-  });
-  const handleCreatePost = () => {
-    if (!postData.title || !postData.content) {
+  
+  const [postData, setPostData] = useState(() => ({
+    ...INITIAL_POST_DATA,
+    authorId: JSON.parse(sessionStorage.getItem("mainUser"))?.id,
+  }));
+
+  const handleClose = useCallback(() => {
+    setShow(false);
+    setPostData({
+      ...INITIAL_POST_DATA,
+      authorId: JSON.parse(sessionStorage.getItem("mainUser"))?.id,
+    });
+    setImageLoaded(false);
+  }, []);
+
+  const handleShow = useCallback(() => setShow(true), []);
+
+  const handleInputChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setPostData((prev) => ({ ...prev, [name]: value }));
+  }, []);
+
+  const handleImageChange = useCallback(async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await loadFile(formData);
+      setPostData((prev) => ({ ...prev, image: response.data.filepath }));
+      setImageLoaded(true);
+    } catch (error) {
+      console.error("Ошибка при загрузке изображения:", error);
+    }
+  }, []);
+
+  const handleCreatePost = useCallback(async () => {
+    if (!postData.title.trim() || !postData.content.trim()) {
       alert("Заполните название и содержимое поста!");
       return;
     }
-    postStore
-      .createPostByData(postData)
-      .then((response) => {
-        console.log("Пост успешно создан", response.data);
-        setPostData({
-          title: "",
-          content: "",
-          authorId: JSON.parse(sessionStorage.getItem("mainUser")).id,
-          image: "",
-        });
-        setLoaded(true);
-      })
-      .catch((error) => {
-        console.error("Ошибка при создании поста", error);
-      })
-      .finally(() => {
-        handleClose();
-      });
-  };
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setPostData({ ...postData, [name]: value });
-  };
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
-    loadFile(formData)
-      .then((response) => {
-        console.log("Загрузка прошла успешно", response.data);
-        setLoaded(true);
-        postData.image = response.data.filepath;
-      })
-      .catch((error) => {
-        console.error("Ошибка при загрузке", error);
-      });
-  };
+    setIsLoading(true);
+    try {
+      await postStore.createPostByData(postData);
+      handleClose();
+    } catch (error) {
+      console.error("Ошибка при создании поста:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [postData, postStore, handleClose]);
 
   return (
     <>
-      <Button
-        style={{
-          marginTop: "15px",
-          marginLeft: "320px",
-          width: "62.4%",
-          height: "50px",
-        }}
-        variant="outline-secondary"
-        className="text-light"
-        onClick={handleShow}
-      >
-        Создать пост
-      </Button>
+      <button className="add-post-button" onClick={handleShow}>
+        + Создать новый пост
+      </button>
 
-      <Modal show={show} onHide={handleClose}>
-        <div className="bg-dark mt-0">
-          <Modal.Header closeButton>
-            <Modal.Title>Создать пост</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form onSubmit={handleCreatePost}>
-              <Form.Group
-                className=" mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label>Загрузить изображение: </Form.Label>
-                <Form.Control
-                  type="file"
-                  name="image"
-                  onChange={handleImageChange}
-                  className="mt-3"
-                />
-                {loaded && postData.image ? (
-                  <div style={{ color: "green" }}>
-                    Изображение успешно загружено
-                  </div>
-                ) : (
-                  ""
-                )}
-              </Form.Group>
-              <Form.Group
-                className=" mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label>Название поста:</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="title"
-                  onChange={handleInputChange}
-                  placeholder="Введите название поста"
-                  autoFocus
-                />
-              </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
-              >
-                <Form.Label>Содержание поста:</Form.Label>
-                <Form.Control
-                  onChange={handleInputChange}
-                  name="content"
-                  type="text"
-                  as="textarea"
-                  rows={3}
-                />
-              </Form.Group>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Закрыть
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => {
-                handleCreatePost();
-              }}
-            >
-              Опубликовать пост
-            </Button>
-          </Modal.Footer>
-        </div>
+      <Modal show={show} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Создать пост</Modal.Title>
+        </Modal.Header>
+        
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Изображение</Form.Label>
+              <Form.Control
+                type="file"
+                name="image"
+                onChange={handleImageChange}
+                accept="image/*"
+              />
+              {imageLoaded && (
+                <div className="upload-success">
+                  Изображение загружено
+                </div>
+              )}
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Название поста</Form.Label>
+              <Form.Control
+                type="text"
+                name="title"
+                value={postData.title}
+                onChange={handleInputChange}
+                placeholder="Введите название"
+                autoFocus
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Содержание</Form.Label>
+              <Form.Control
+                as="textarea"
+                name="content"
+                value={postData.content}
+                onChange={handleInputChange}
+                rows={4}
+                placeholder="О чем хотите рассказать?"
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Отмена
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={handleCreatePost}
+            disabled={isLoading}
+          >
+            {isLoading ? "Публикация..." : "Опубликовать"}
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   );
-}
+};
 
 export default AddPostModal;

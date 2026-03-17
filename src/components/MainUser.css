@@ -1,0 +1,64 @@
+/* User profile card in sidebar */
+.user-profile-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  transition: background-color var(--transition-fast);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+}
+
+.user-info:hover {
+  opacity: 0.9;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-email {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-dropdown-toggle {
+  padding: var(--spacing-xs);
+  color: var(--color-text-muted);
+  border: none;
+  background: transparent;
+}
+
+.user-dropdown-toggle:hover,
+.user-dropdown-toggle:focus {
+  color: var(--color-text-primary);
+  background: transparent;
+  box-shadow: none;
+}
+
+.user-dropdown-toggle::after {
+  display: none;
+}
