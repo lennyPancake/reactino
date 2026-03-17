@@ -1,12 +1,14 @@
 import React from "react";
-import Post from "../components/Post";
 import { useParams } from "react-router-dom";
-import "./aboutpost.css";
+import Post from "../components/Post";
 import withAuth from "../components/withAuth";
+import "./Pages.css";
+
 const AboutPost = () => {
   const { id } = useParams();
+
   return (
-    <div>
+    <div className="page-wrapper">
       <Post postId={id} />
     </div>
   );

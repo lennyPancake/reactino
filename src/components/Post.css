@@ -1,0 +1,10 @@
+/* Post Detail Styles */
+.post-detail-container {
+  margin-left: var(--sidebar-width);
+  padding: var(--spacing-lg);
+  min-height: 100vh;
+}
+
+.post-detail-content {
+  max-width: 800px;
+}

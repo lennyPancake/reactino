@@ -1,21 +1,23 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import { RootStoreContext } from "..";
 import UsersList from "../components/UsersList";
 import withAuth from "../components/withAuth";
-import { useContext, useEffect } from "react";
-import { RootStoreContext } from "..";
+import "./Pages.css";
 
 const AllUsers = () => {
   const { userStore } = useContext(RootStoreContext);
+
   useEffect(() => {
-    !userStore.isLoading
-      ? userStore.fetchUsers()
-      : console.log("идет загрузка");
-  }, []);
+    if (!userStore.isLoading && userStore.users.length === 0) {
+      userStore.fetchUsers();
+    }
+  }, [userStore]);
+
   return (
-    <>
-      <h1 style={{ marginLeft: "310px" }}>Список Блогов</h1>
+    <div className="page-wrapper">
+      <h1 className="page-title">Все блоги</h1>
       <UsersList />
-    </>
+    </div>
   );
 };
 

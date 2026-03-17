@@ -1,130 +1,130 @@
-import { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
-import { useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
+import { Button, Form, Modal } from "react-bootstrap";
 import { RootStoreContext } from "..";
 import { loadFile } from "../API/fileAPI";
+import "./PostModal.css";
 
 const EditPostModal = ({ show, onClose, editPostData }) => {
-  const [loaded, setLoaded] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { postStore } = useContext(RootStoreContext);
   const [postData, setPostData] = useState(editPostData);
+
   useEffect(() => {
     setPostData(editPostData);
+    setImageLoaded(false);
   }, [editPostData]);
 
-  const handleEditPost = () => {
-    if (
-      postData.title === editPostData.title &&
-      postData.content === editPostData.content &&
-      postData.image === editPostData.image
-    ) {
-      onClose();
-    } else {
-      postStore.updatePostByData(postData);
-      onClose();
-    }
-  };
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setPostData({ ...postData, [name]: value });
-  };
+  const handleInputChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setPostData((prev) => ({ ...prev, [name]: value }));
+  }, []);
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
+  const handleImageChange = useCallback(async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
     const formData = new FormData();
     formData.append("file", file);
-    loadFile(formData)
-      .then((response) => {
-        console.log("Загрузка прошла успешно", response.data);
-        setLoaded(true);
-        postData.image = response.data.filepath;
-      })
-      .catch((error) => {
-        console.error("Ошибка при загрузке", error);
-      });
-  };
+
+    try {
+      const response = await loadFile(formData);
+      setPostData((prev) => ({ ...prev, image: response.data.filepath }));
+      setImageLoaded(true);
+    } catch (error) {
+      console.error("Ошибка при загрузке изображения:", error);
+    }
+  }, []);
+
+  const handleEditPost = useCallback(async () => {
+    const isUnchanged =
+      postData.title === editPostData.title &&
+      postData.content === editPostData.content &&
+      postData.image === editPostData.image;
+
+    if (isUnchanged) {
+      onClose();
+      return;
+    }
+
+    if (!postData.title?.trim() || !postData.content?.trim()) {
+      alert("Заполните название и содержимое поста!");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await postStore.updatePostByData(postData);
+      onClose();
+    } catch (error) {
+      console.error("Ошибка при обновлении поста:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [postData, editPostData, postStore, onClose]);
 
   return (
-    <>
-      <Modal
-        show={show}
-        onHide={() => {
-          onClose();
-        }}
-      >
-        <div className="bg-dark mt-0">
-          <Modal.Header closeButton>
-            <Modal.Title>Редактировать пост</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              <Form.Group
-                className=" mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label>Изменить изображение: </Form.Label>
-                <Form.Control
-                  type="file"
-                  name="image"
-                  onChange={handleImageChange}
-                  className="mt-3"
-                />
-                {loaded && postData.image ? (
-                  <div style={{ color: "green" }}>
-                    Изображение успешно загружено
-                  </div>
-                ) : (
-                  ""
-                )}
-              </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label>Название поста:</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="title"
-                  value={postData.title}
-                  onChange={handleInputChange}
-                  placeholder="Введите название поста"
-                  autoFocus
-                />
-              </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
-              >
-                <Form.Label>Содержание поста:</Form.Label>
-                <Form.Control
-                  value={postData.content}
-                  onChange={handleInputChange}
-                  name="content"
-                  type="text"
-                  as="textarea"
-                  rows={3}
-                />
-              </Form.Group>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => onClose()}>
-              Закрыть
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => {
-                handleEditPost();
-              }}
-            >
-              Сохранить изменения
-            </Button>
-          </Modal.Footer>
-        </div>
-      </Modal>
-    </>
+    <Modal show={show} onHide={onClose} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Редактировать пост</Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
+        <Form>
+          <Form.Group className="mb-3">
+            <Form.Label>Изображение</Form.Label>
+            <Form.Control
+              type="file"
+              name="image"
+              onChange={handleImageChange}
+              accept="image/*"
+            />
+            {imageLoaded && (
+              <div className="upload-success">
+                Новое изображение загружено
+              </div>
+            )}
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Название поста</Form.Label>
+            <Form.Control
+              type="text"
+              name="title"
+              value={postData.title || ""}
+              onChange={handleInputChange}
+              placeholder="Введите название"
+              autoFocus
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Содержание</Form.Label>
+            <Form.Control
+              as="textarea"
+              name="content"
+              value={postData.content || ""}
+              onChange={handleInputChange}
+              rows={4}
+              placeholder="О чем хотите рассказать?"
+            />
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button variant="secondary" onClick={onClose}>
+          Отмена
+        </Button>
+        <Button 
+          variant="primary" 
+          onClick={handleEditPost}
+          disabled={isLoading}
+        >
+          {isLoading ? "Сохранение..." : "Сохранить"}
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 

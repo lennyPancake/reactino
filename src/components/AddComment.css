@@ -1,0 +1,42 @@
+/* Add Comment Section */
+.add-comment-section {
+  margin-top: var(--spacing-xl);
+  padding-bottom: var(--spacing-2xl);
+}
+
+.add-comment-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-text-primary);
+}
+
+.add-comment-form {
+  max-width: 100%;
+}
+
+.comment-textarea {
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  resize: vertical;
+  min-height: 100px;
+}
+
+.comment-textarea:focus {
+  background-color: var(--color-bg-card);
+  border-color: var(--color-accent);
+  color: var(--color-text-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.comment-textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.add-comment-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--spacing-md);
+}

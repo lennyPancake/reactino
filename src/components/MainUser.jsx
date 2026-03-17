@@ -1,61 +1,79 @@
-import React, { useEffect } from "react";
-import { useContext } from "react";
-import { RootStoreContext } from "..";
-import { Col } from "react-bootstrap";
-import Image from "react-bootstrap/Image";
-import Dropdown from "react-bootstrap/Dropdown";
-import SplitButton from "react-bootstrap/SplitButton";
+import React, { useContext, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { RootStoreContext } from "..";
+import { Image, Dropdown } from "react-bootstrap";
+import "./MainUser.css";
+
 const MainUser = () => {
   const navigate = useNavigate();
   const { userStore } = useContext(RootStoreContext);
 
-  userStore.mainUser = JSON.parse(sessionStorage.getItem("mainUser"));
-  if (sessionStorage.length == 0) {
+  const mainUser = useMemo(() => {
+    const stored = sessionStorage.getItem("mainUser");
+    if (stored) {
+      const user = JSON.parse(stored);
+      userStore.mainUser = user;
+      return user;
+    }
+    return null;
+  }, [userStore]);
+
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("mainUser");
     navigate("/login");
-    return "";
+  }, [navigate]);
+
+  const handleProfileClick = useCallback(() => {
+    if (mainUser) {
+      navigate(`/users/${mainUser.id}`);
+    }
+  }, [navigate, mainUser]);
+
+  if (!mainUser) {
+    navigate("/login");
+    return null;
   }
+
   return (
-    <SplitButton
-      onClick={() => {
-        navigate(`/users/${userStore.mainUser.id}`);
-      }}
-      title={
-        <div>
-          <Col xs={6} md={4} style={{ width: "auto" }}>
-            <Image
-              style={{ width: "50px", height: "50px" }}
-              src={userStore.mainUser.avatar}
-              roundedCircle
-            />
-          </Col>
-          <div style={{ marginLeft: "15px" }}>
-            {userStore.mainUser.first_name} {userStore.mainUser.last_name}
-            <div>{userStore.mainUser.email}</div>
-          </div>
+    <div className="user-profile-card">
+      <div className="user-info" onClick={handleProfileClick}>
+        <Image
+          src={mainUser.avatar}
+          className="avatar avatar-md"
+          alt={`${mainUser.first_name} ${mainUser.last_name}`}
+        />
+        <div className="user-details">
+          <span className="user-name">
+            {mainUser.first_name} {mainUser.last_name}
+          </span>
+          <span className="user-email">{mainUser.email}</span>
         </div>
-      }
-      id="dropdown-menu-align-right"
-      variant="outline-secondary"
-      style={{
-        display: "flex",
-        marginTop: "25%",
-        marginLeft: "20px",
-        position: "fixed",
-        color: "white",
-        width: "19%",
-      }}
-    >
-      <Dropdown.Item
-        onClick={() => {
-          localStorage.removeItem("token");
-          sessionStorage.removeItem("mainUser");
-          navigate("/login");
-        }}
-      >
-        Выход
-      </Dropdown.Item>
-    </SplitButton>
+      </div>
+      
+      <Dropdown align="end">
+        <Dropdown.Toggle 
+          variant="link" 
+          id="user-dropdown"
+          className="user-dropdown-toggle"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="1" />
+            <circle cx="12" cy="5" r="1" />
+            <circle cx="12" cy="19" r="1" />
+          </svg>
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          <Dropdown.Item onClick={handleProfileClick}>
+            Мой профиль
+          </Dropdown.Item>
+          <Dropdown.Divider />
+          <Dropdown.Item onClick={handleLogout} className="text-danger">
+            Выход
+          </Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    </div>
   );
 };
 

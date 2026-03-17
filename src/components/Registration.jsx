@@ -1,176 +1,207 @@
-import MainUser from "./MainUser";
-import { React, useState } from "react";
-import axios from "axios";
-import withAuth from "./withAuth";
-import "./Registration.module.css";
-import { useContext } from "react";
+import React, { useState, useContext, useCallback, useMemo } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { RootStoreContext } from "..";
-import { useNavigate } from "react-router-dom";
-import { Container, Form, Button } from "react-bootstrap";
+import { Form, Button, Image } from "react-bootstrap";
 import { register } from "../API/userAPI";
 import { loadFile } from "../API/fileAPI";
-import Image from "react-bootstrap/Image";
+import "../pages/Auth.css";
+
+const INITIAL_USER_DATA = {
+  email: "",
+  password: "",
+  first_name: "",
+  last_name: "",
+  avatar: "",
+};
+
 const Registration = () => {
   const { userStore } = useContext(RootStoreContext);
   const navigate = useNavigate();
-  const [match, setMatch] = useState(true);
-  const [loaded, setLoaded] = useState(false);
-  const [retryPass, setRetryPass] = useState("");
-  const [userData, setUserData] = useState({
-    email: "",
-    password: "",
-    first_name: "",
-    last_name: "",
-    avatar: "",
-  });
-  const handleAvatarChange = (event) => {
-    const file = event.target.files[0];
+  
+  const [userData, setUserData] = useState(INITIAL_USER_DATA);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [avatarLoaded, setAvatarLoaded] = useState(false);
+  const [error, setError] = useState("");
+
+  const passwordsMatch = useMemo(() => {
+    if (!confirmPassword) return null;
+    return userData.password === confirmPassword;
+  }, [userData.password, confirmPassword]);
+
+  const handleInputChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setUserData((prev) => ({ ...prev, [name]: value }));
+  }, []);
+
+  const handleAvatarChange = useCallback(async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
     const formData = new FormData();
     formData.append("file", file);
-    loadFile(formData)
-      .then((response) => {
-        console.log("Загрузка прошла успешно", response.data);
-        setLoaded(true);
-        userData.avatar = response.data.filepath;
-      })
-      .catch((error) => {
-        console.error("Ошибка при загрузке", error);
-      });
-  };
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setUserData({ ...userData, [name]: value });
-  };
+    try {
+      const response = await loadFile(formData);
+      setUserData((prev) => ({ ...prev, avatar: response.data.filepath }));
+      setAvatarLoaded(true);
+    } catch (error) {
+      console.error("Ошибка при загрузке аватара:", error);
+    }
+  }, []);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    // Отправляем данные на сервер
+  const handleSubmit = useCallback(async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!userData.first_name.trim() || !userData.last_name.trim()) {
+      setError("Введите имя и фамилию");
+      return;
+    }
+
+    if (!userData.email.trim()) {
+      setError("Введите email");
+      return;
+    }
+
+    if (!userData.password || userData.password.length < 4) {
+      setError("Пароль должен быть не менее 4 символов");
+      return;
+    }
+
+    if (userData.password !== confirmPassword) {
+      setError("Пароли не совпадают");
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
       const response = await register(userData);
-      console.log("Регистрация прошла успешно", response.data);
       const { user, token } = response.data;
+      
       localStorage.setItem("token", token);
       userStore.mainUser = user;
-      console.log(
-        "Айди зарегистрированного пользователя: ",
-        userStore.mainUser.id
-      );
-      sessionStorage.setItem("mainUser", JSON.stringify(userStore.mainUser));
-      navigate("/users/" + userStore.mainUser.id);
+      sessionStorage.setItem("mainUser", JSON.stringify(user));
+      
+      navigate(`/users/${user.id}`);
     } catch (error) {
-      console.error("Ошибка при регистрации", error);
+      setError("Ошибка при регистрации. Попробуйте еще раз.");
+      console.error("Ошибка регистрации:", error);
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [userData, confirmPassword, userStore, navigate]);
 
   return (
-    <Container className="d-flex justify-content-center align-items-center">
-      <Form
-        className="border bg-black bg-opacity-10 p-4 mt-5 rounded"
-        style={{ width: "50%", minWidth: "500px " }}
-        onSubmit={handleSubmit}
-      >
-        <h2>Регистрация</h2>
-        <div className="mt-4">
-          Имя:
-          <Form.Control
-            type="text"
-            name="first_name"
-            value={userData.first_name}
-            onChange={handleInputChange}
-            className="mt-2"
-            placeholder="Имя"
-          />
-        </div>
-        <div className="mt-4">
-          Фамилия:
-          <Form.Control
-            type="text"
-            name="last_name"
-            value={userData.last_name}
-            onChange={handleInputChange}
-            className="mt-2"
-            placeholder="Фамилия"
-          />
-        </div>
-        <div className="mt-4">
-          {" "}
-          Email:
-          <Form.Control
-            type="text"
-            name="email"
-            value={userData.email}
-            onChange={handleInputChange}
-            className="mt-2"
-            placeholder="email"
-          />
-        </div>
-        <div className="mt-4">
-          Пароль:
-          <Form.Control
-            type="password"
-            name="password"
-            value={userData.password}
-            onChange={handleInputChange}
-            className="mt-2"
-            placeholder="Password"
-          />
-        </div>
-        <div className="mt-4">
-          Повторите пароль:
-          {!match ? (
-            <div style={{ color: "red" }}>Пароли не совпадают</div>
-          ) : (
-            ""
-          )}
-          <Form.Control
-            type="password"
-            name="passwordRepeat"
-            value={retryPass}
-            onChange={(event) => {
-              setRetryPass(event.target.value);
-              setMatch(event.target.value === userData.password);
-            }}
-            className="mt-2"
-            placeholder="Password"
-          />
-        </div>
-        <div className="mt-4">
-          Аватар:
-          <Form.Control
-            type="file"
-            name="avatar"
-            onChange={handleAvatarChange}
-            className="mt-2"
-          />
-          {loaded ? (
-            <div style={{ color: "green" }}>Изображение успешно загружено</div>
-          ) : (
-            ""
-          )}
-        </div>
-        <div className="mt-5">
-          Уже зарегистрированы? <a href="/login">Войти</a>
-        </div>
-        <div className="d-flex justify-content-end align-items-start mt-3">
-          <Button variant="success" className="mt-1" type="submit">
-            {" "}
-            Зарегистрироваться
+    <div className="auth-register-container">
+      <div className="auth-register-card fade-in">
+        <h1 className="auth-title">Регистрация</h1>
+
+        {error && <div className="auth-error">{error}</div>}
+
+        <Form onSubmit={handleSubmit} className="auth-form">
+          <div className="row">
+            <Form.Group className="col-6 mb-3">
+              <Form.Label>Имя</Form.Label>
+              <Form.Control
+                type="text"
+                name="first_name"
+                value={userData.first_name}
+                onChange={handleInputChange}
+                placeholder="Имя"
+                autoFocus
+              />
+            </Form.Group>
+
+            <Form.Group className="col-6 mb-3">
+              <Form.Label>Фамилия</Form.Label>
+              <Form.Control
+                type="text"
+                name="last_name"
+                value={userData.last_name}
+                onChange={handleInputChange}
+                placeholder="Фамилия"
+              />
+            </Form.Group>
+          </div>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="email"
+              name="email"
+              value={userData.email}
+              onChange={handleInputChange}
+              placeholder="Введите email"
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Пароль</Form.Label>
+            <Form.Control
+              type="password"
+              name="password"
+              value={userData.password}
+              onChange={handleInputChange}
+              placeholder="Минимум 4 символа"
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Подтвердите пароль</Form.Label>
+            <Form.Control
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Повторите пароль"
+            />
+            {passwordsMatch !== null && (
+              <div className={`password-match ${passwordsMatch ? "success" : "error"}`}>
+                {passwordsMatch ? "Пароли совпадают" : "Пароли не совпадают"}
+              </div>
+            )}
+          </Form.Group>
+
+          <Form.Group className="mb-4">
+            <Form.Label>Аватар</Form.Label>
+            <Form.Control
+              type="file"
+              name="avatar"
+              onChange={handleAvatarChange}
+              accept="image/*"
+            />
+            {avatarLoaded && (
+              <div className="upload-status success">
+                Изображение загружено
+              </div>
+            )}
+          </Form.Group>
+
+          <Button
+            type="submit"
+            variant="success"
+            className="auth-submit-btn"
+            disabled={isLoading || passwordsMatch === false}
+          >
+            {isLoading ? "Регистрация..." : "Зарегистрироваться"}
           </Button>
+        </Form>
+
+        <div className="auth-footer">
+          <span>Уже есть аккаунт?</span>
+          <Link to="/login">Войти</Link>
         </div>
-      </Form>
-      <Image
-        style={{
-          flexDirection: "row",
-          maxWidth: "400px",
-          width: "auto",
-          marginBottom: "20px",
-          marginLeft: "10%",
-        }}
-        src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
-        rounded
-      />
-    </Container>
+      </div>
+
+      <div className="auth-side-image">
+        <Image
+          src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
+          rounded
+          alt="Logo"
+        />
+      </div>
+    </div>
   );
 };
 
