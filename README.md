@@ -40,8 +40,3 @@
 - Файловая загрузка (multipart/form-data)
 
 ---
-
-<code>git clone https://github.com/lennyPancake/reactino</code><br/>
-<code>npm install</code><br/>
-<code>python -m pip install -r backend/requirements.txt</code><br/>
-<code>npm run dev</code><br/>
