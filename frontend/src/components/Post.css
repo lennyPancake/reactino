@@ -3,6 +3,19 @@
   margin-left: var(--sidebar-width);
   padding: var(--spacing-lg);
   min-height: 100vh;
+  transition: margin-left var(--transition-sidebar);
+}
+
+@media (max-width: 1080px) {
+  .post-detail-container {
+    margin-left: var(--sidebar-collapsed-width);
+  }
+}
+
+@media (max-width: 480px) {
+  .post-detail-container {
+    padding: var(--spacing-md);
+  }
 }
 
 .post-detail-content {

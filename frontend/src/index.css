@@ -32,8 +32,12 @@
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
 
-  --sidebar-width: 280px;
-  --sidebar-collapsed-width: 60px;
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 64px;
+  --transition-sidebar: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Текущая ширина сайдбара (меняется в JS через CSS custom prop на body) */
+  --current-sidebar-width: var(--sidebar-width);
 }
 
 *,
@@ -81,6 +85,13 @@ code {
   margin-left: var(--sidebar-width);
   padding: var(--spacing-lg);
   min-height: 100vh;
+  transition: margin-left var(--transition-sidebar);
+}
+
+@media (max-width: 1080px) {
+  .main-content {
+    margin-left: var(--sidebar-collapsed-width);
+  }
 }
 
 .page-title {

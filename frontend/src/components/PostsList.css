@@ -1,14 +1,17 @@
 /* Posts List Container */
 .posts-list {
   padding: var(--spacing-lg);
-  margin-left: var(--sidebar-width);
+  margin-left: 0px;
   width: 100%;
   max-width: 800px;
+  transition: margin-left var(--transition-sidebar);
 }
+
 .posts-container {
   margin-left: var(--sidebar-width);
   padding: var(--spacing-lg);
   min-height: 100vh;
+  transition: margin-left var(--transition-sidebar);
 }
 
 .posts-grid {
@@ -41,10 +44,20 @@
 }
 @media (max-width: 1080px) {
   .posts-list {
-    margin-left: var(--sidebar-collapsed-width);
-    transition: all 0.3s ease;
+    margin-left: 0;
   }
+
   .posts-container {
     margin-left: var(--sidebar-collapsed-width);
+  }
+}
+
+@media (max-width: 480px) {
+  .posts-list {
+    padding: var(--spacing-md);
+  }
+
+  .posts-container {
+    padding: var(--spacing-md);
   }
 }

@@ -14,7 +14,10 @@ const AllPosts = () => {
 
   return (
     <div className="page-wrapper">
-      <PostsList />
+      <div className="posts-container">
+        {" "}
+        <PostsList />
+      </div>
     </div>
   );
 };

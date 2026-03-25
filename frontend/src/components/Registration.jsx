@@ -21,7 +21,6 @@ const Registration = () => {
   const [userData, setUserData] = useState(INITIAL_USER_DATA);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [avatarLoaded, setAvatarLoaded] = useState(false);
   const [error, setError] = useState("");
 
   const passwordsMatch = useMemo(() => {
@@ -33,24 +32,6 @@ const Registration = () => {
     const { name, value } = e.target;
     setUserData((prev) => ({ ...prev, [name]: value }));
   }, []);
-
-  const handleAvatarChange = useCallback(async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await loadFile(formData);
-      // Сервер вернет { "filepath": "/static/images/photo.jpg" }
-      setUserData((prev) => ({ ...prev, avatar: response.data.filepath }));
-      setAvatarLoaded(true);
-    } catch (error) {
-      console.error("Ошибка при загрузке:", error);
-    }
-  }, []);
-
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
@@ -98,7 +79,7 @@ const Registration = () => {
   );
 
   return (
-    <div className="auth-register-container">
+    <div className="auth-container">
       <div className="auth-register-card fade-in">
         <h1 className="auth-title">Регистрация</h1>
 
@@ -168,20 +149,6 @@ const Registration = () => {
               </div>
             )}
           </Form.Group>
-
-          <Form.Group className="mb-4">
-            <Form.Label>Аватар</Form.Label>
-            <Form.Control
-              type="file"
-              name="avatar"
-              onChange={handleAvatarChange}
-              accept="image/*"
-            />
-            {avatarLoaded && (
-              <div className="upload-status success">Изображение загружено</div>
-            )}
-          </Form.Group>
-
           <Button
             type="submit"
             variant="success"
@@ -200,7 +167,7 @@ const Registration = () => {
 
       <div className="auth-side-image">
         <Image
-          src={`${process.env.REACT_APP_BASE_URL}/images/logo.jpg`}
+          src={`${process.env.REACT_APP_BASE_URL}/static/images/logo.jpg`}
           rounded
           alt="Logo"
         />

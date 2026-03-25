@@ -117,6 +117,7 @@
   .auth-side-image {
     display: block;
     max-width: 350px;
+    margin: 5%;
   }
 
   .auth-side-image img {

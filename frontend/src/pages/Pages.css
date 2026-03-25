@@ -11,4 +11,11 @@
   font-size: 1.75rem;
   font-weight: 600;
   color: var(--color-text-primary);
+  transition: margin-left var(--transition-sidebar);
+}
+
+@media (max-width: 1080px) {
+  .page-title {
+    margin-left: var(--sidebar-collapsed-width);
+  }
 }

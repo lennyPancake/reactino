@@ -78,8 +78,8 @@ const MainUser = () => {
             <circle cx="12" cy="19" r="1" />
           </svg>
         </Dropdown.Toggle>
-        <Dropdown.Menu>
-          <Dropdown.Item onClick={handleProfileClick}>
+        <Dropdown.Menu className="bg-dark">
+          <Dropdown.Item onClick={handleProfileClick} className="text-white">
             Мой профиль
           </Dropdown.Item>
           <Dropdown.Divider />

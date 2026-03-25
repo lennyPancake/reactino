@@ -64,7 +64,12 @@ const EditPostModal = ({ show, onClose, editPostData }) => {
   }, [postData, editPostData, postStore, onClose]);
 
   return (
-    <Modal show={show} onHide={onClose} centered>
+    <Modal
+      show={show}
+      onHide={onClose}
+      centered
+      contentClassName="bg-dark text-white"
+    >
       <Modal.Header closeButton>
         <Modal.Title>Редактировать пост</Modal.Title>
       </Modal.Header>
@@ -80,9 +85,7 @@ const EditPostModal = ({ show, onClose, editPostData }) => {
               accept="image/*"
             />
             {imageLoaded && (
-              <div className="upload-success">
-                Новое изображение загружено
-              </div>
+              <div className="upload-success">Новое изображение загружено</div>
             )}
           </Form.Group>
 
@@ -116,11 +119,7 @@ const EditPostModal = ({ show, onClose, editPostData }) => {
         <Button variant="secondary" onClick={onClose}>
           Отмена
         </Button>
-        <Button 
-          variant="primary" 
-          onClick={handleEditPost}
-          disabled={isLoading}
-        >
+        <Button variant="primary" onClick={handleEditPost} disabled={isLoading}>
           {isLoading ? "Сохранение..." : "Сохранить"}
         </Button>
       </Modal.Footer>

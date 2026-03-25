@@ -6,7 +6,10 @@
   padding: var(--spacing-md);
   background-color: var(--color-bg-card);
   border-radius: var(--radius-lg);
-  transition: background-color var(--transition-fast);
+  transition:
+    background-color var(--transition-fast),
+    padding var(--transition-fast);
+  overflow: visible;
 }
 
 .user-info {
@@ -59,6 +62,20 @@
   box-shadow: none;
 }
 
+.dropdown-menu.bg-dark .dropdown-item:hover {
+  background-color: #12467a;
+}
+
+.dropdown-menu.bg-dark .dropdown-item.text-danger:hover {
+  background-color: rgba(241, 241, 241, 0.1);
+}
+
 .user-dropdown-toggle::after {
   display: none;
+}
+@media (max-width: 1080px) {
+  .avatar {
+    width: 35px;
+    height: auto;
+  }
 }
