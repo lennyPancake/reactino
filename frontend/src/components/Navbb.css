@@ -1,0 +1,135 @@
+:root {
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 80px;
+}
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+  z-index: 100;
+  transition: width 0.3s ease; /* Плавное расширение */
+  overflow-x: hidden;
+}
+/* Состояние по умолчанию на узких экранах */
+@media (max-width: 1080px) {
+  .sidebar {
+    width: var(--sidebar-collapsed-width);
+  }
+
+  .sidebar:not(.expanded) .nav-link-text,
+  .sidebar:not(.expanded) .sidebar-logo,
+  .sidebar:not(.expanded) .sidebar-footer {
+    display: none;
+  }
+
+  .sidebar:not(.expanded) .nav-link-custom {
+    justify-content: center;
+    padding: var(--spacing-md);
+  }
+}
+
+/* Когда добавлен класс .expanded (через кнопку) */
+.sidebar.expanded {
+  width: var(--sidebar-width) !important;
+}
+.sidebar.expanded .nav-link-text,
+.sidebar.expanded .sidebar-logo,
+.sidebar.expanded .sidebar-footer {
+  display: flex !important;
+}
+
+.sidebar.expanded .nav-link-custom {
+  justify-content: flex-start;
+  padding: var(--spacing-md) var(--spacing-lg);
+}
+.diva {
+  display: flex;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  font-size: 1.5rem;
+  color: var(--color-text-primary);
+  margin: 0 auto;
+  outline: none;
+}
+
+.nav-link-custom {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  white-space: nowrap; /* Чтобы текст не переносился при анимации */
+}
+
+/* Остальные твои стили (logo-image, hover и т.д.) остаются без изменений */
+
+.logo-image {
+  width: 180px;
+  height: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-normal);
+}
+
+.logo-image:hover {
+  transform: scale(1.02);
+}
+
+/* Navigation */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.nav-link-custom {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all var(--transition-fast);
+}
+
+.nav-link-custom:hover {
+  background-color: var(--color-bg-hover);
+  color: var(--color-text-primary);
+  transform: translateX(4px);
+}
+
+.nav-link-custom.active {
+  background-color: var(--color-accent);
+  color: var(--color-text-primary);
+}
+
+.nav-link-custom.active:hover {
+  transform: none;
+}
+
+.nav-link-text {
+  white-space: nowrap;
+}
+
+/* Sidebar footer */
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-border);
+}
