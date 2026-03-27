@@ -8,6 +8,7 @@ import AllPosts from "./pages/AllPosts";
 import Navb from "./components/Navb";
 import AboutPost from "./pages/AboutPost";
 import AllUsers from "./pages/AllUsers";
+import Settings from "./pages/Settings";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/users/" element={<AllUsers />} />
         <Route path="/posts/" element={<AllPosts />} />
         <Route path="/posts/:id" element={<AboutPost />} />
+        <Route path="/users/:id/settings" element={<Settings />} />
         <Route path="/*" element={<Navigate to="/posts" replace />} />
       </Routes>
     </BrowserRouter>

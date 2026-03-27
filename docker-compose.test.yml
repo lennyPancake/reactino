@@ -1,0 +1,101 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: blog_db
+    environment:
+      POSTGRES_DB: blog_test
+      POSTGRES_USER: blog_user
+      POSTGRES_PASSWORD: SuperSecure123
+    ports:
+      - "5433:5432" # другой порт, чтобы не конфликтовать с dev
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blog_user -d blog_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    container_name: blog_backend_test
+    ports:
+      - "8001:8000" # другой порт
+    env_file:
+      - ./backend/.env.test
+    environment:
+      - ENVIRONMENT=test
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    command: >
+      sh -c "
+        echo '=== Tables will be created by FastAPI startup ===' &&
+        echo '=== Starting FastAPI ===' &&
+        uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+
+  frontend:
+    build: ./frontend
+    container_name: blog_frontend_test
+    ports:
+      - "3001:3000"
+    environment:
+      - REACT_APP_BASE_URL=http://backend:8000
+      - WDS_SOCKET_PORT=0
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    stdin_open: true
+    tty: true
+
+  selenium:
+    image: selenium/standalone-chrome:latest
+    container_name: selenium_chrome
+    ports:
+      - "4444:4444" # для Remote WebDriver
+      - "7900:7900" # VNC (можно смотреть тесты в браузере)
+    shm_size: 2gb
+    environment:
+      - SE_NODE_MAX_SESSIONS=5
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+    depends_on:
+      - frontend
+
+  e2e-tests:
+    build:
+      context: .
+      dockerfile: tests/Dockerfile.e2e
+    environment:
+      - SELENIUM_REMOTE_URL=http://selenium:4444/wd/hub
+      - BASE_URL=http://frontend:3000
+      - PYTHONPATH=/tests
+    volumes:
+      - ./tests:/tests
+    working_dir: /tests/e2e
+    depends_on:
+      selenium:
+        condition: service_started
+      frontend:
+        condition: service_started
+      backend:
+        condition: service_started
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "
+        echo '=== Waiting for services to be ready ===' &&
+        sleep 1 &&
+        echo '=== Starting pytest ===' &&
+        pytest . -v --html=/tests/report.html --self-contained-html
+      "
+
+volumes:
+  postgres_test_data:

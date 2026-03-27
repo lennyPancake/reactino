@@ -39,7 +39,6 @@ const PostsList = observer(() => {
   }, []);
 
   if (postStore.isLoading) return <LoadingSpinner />;
-
   return (
     <>
       <EditPostModal

@@ -12,7 +12,7 @@ const UserCard = ({ user, onNavigate }) => (
       <Image
         src={
           user.avatar
-            ? user.avatar
+            ? `${process.env.REACT_APP_BASE_URL}${user.avatar}`
             : `${process.env.REACT_APP_BASE_URL}/static/images/noavatar.png`
         }
         alt={`${user.first_name} ${user.last_name}`}

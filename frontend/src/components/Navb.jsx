@@ -232,7 +232,7 @@ const Navb = () => {
 
           {/* Пользователь */}
           <div className="sidebar-footer">
-            <MainUser />
+            <MainUser isExpanded={isExpanded} />
           </div>
         </div>
       </aside>

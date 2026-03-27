@@ -1,0 +1,22 @@
+FROM python:3.11-slim
+
+WORKDIR /tests
+
+# Устанавливаем системные зависимости для Selenium + Chrome
+RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg \
+    unzip \
+    curl \
+    xvfb \
+    && rm -rf /var/lib/apt/lists/*
+
+# Устанавливаем Python зависимости
+COPY tests/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копируем тесты
+COPY tests/e2e/ ./e2e/
+
+# Запуск тестов через pytest
+CMD ["pytest", "e2e/", "-v", "--headed=false"]

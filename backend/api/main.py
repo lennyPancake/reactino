@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File, F
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
-from sqlmodel import Session, select
+from sqlmodel import SQLModel, Session, select
 from sqlalchemy.orm import joinedload
 from typing import Annotated, List, Optional
 from jose import jwt, JWTError
@@ -12,10 +12,21 @@ import os
 import shutil
 import uuid
 
+from core.config import settings
 from core.database import engine, get_session
 from models import CommentRead, PostCreate, PostRead, User, Post, Comment, UserBase, PostBase, CommentBase, CommentCreate
 
 app = FastAPI(title="Simple Blog API")
+
+# Заставим SQLModel автоматически первично создать таблицы, если они ещё не существуют.
+# Это удобно для локальной разработки, в production лучше держать миграции через alembic.
+@app.on_event("startup")
+def on_startup():
+    SQLModel.metadata.create_all(engine)
+
+SECRET_KEY = settings.JWT_SECRET
+ALGORITHM = settings.ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
 
 # CORS: allow frontend dev server access
@@ -44,9 +55,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 #             JWT & Auth helpers
 # ────────────────────────────────────────
 
-SECRET_KEY = os.getenv("JWT_SECRET", "pagan_very_long_random_string_at_least_64_chars")
-ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("JWT_ACCESS_TOKEN_EXPIRE_MINUTES", 180))
+# Значения берём из core.config.settings, единообразно с backend/core/config.py
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
@@ -171,8 +180,9 @@ async def upload_file(
 @app.get("/posts", response_model=List[PostRead])
 def get_posts(session: Session = Depends(get_session)):
     # joinedload(Post.author) подтянет данные пользователя
-    stmt = select(Post).options(joinedload(Post.author)).order_by(Post.created_at.desc())
+    stmt = select(Post) 
     posts = session.exec(stmt).all()
+    print(f"Полученные посты: {posts}")
     return posts
 
 @app.get("/posts/{post_id}")
@@ -300,6 +310,30 @@ def delete_comment(
 # ────────────────────────────────────────
 #         Простые эндпоинты для проверки
 # ────────────────────────────────────────
+
+@app.put("/users/me")
+def update_current_user(
+    first_name: Annotated[Optional[str], Form()] = None,
+    last_name: Annotated[Optional[str], Form()] = None,
+    avatar: Annotated[Optional[str], Form()] = None,
+    password: Annotated[Optional[str], Form()] = None,
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_session)
+):
+    if first_name is not None:
+        current_user.first_name = first_name
+    if last_name is not None:
+        current_user.last_name = last_name
+    if avatar is not None:
+        current_user.avatar = avatar
+    if password is not None:
+        current_user.password_hash = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+    session.add(current_user)
+    session.commit()
+    session.refresh(current_user)
+    return current_user.dict(exclude={"password_hash"})
+
 
 @app.get("/users")
 def get_all_users(session: Session = Depends(get_session)):

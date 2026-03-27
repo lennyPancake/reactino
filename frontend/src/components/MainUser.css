@@ -70,12 +70,13 @@
   background-color: rgba(241, 241, 241, 0.1);
 }
 
+.avatar-lg {
+  width: 33%;
+  height: auto;
+}
+.avatar-sm {
+  width: auto;
+}
 .user-dropdown-toggle::after {
   display: none;
-}
-@media (max-width: 1080px) {
-  .avatar {
-    width: 35px;
-    height: auto;
-  }
 }

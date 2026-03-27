@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { getUsers } from "../API/userAPI";
+import { getUsers, updateUser } from "../API/userAPI";
 class UserStore {
   users = [];
   mainUser = {
@@ -7,7 +7,7 @@ class UserStore {
     first_name: "",
     last_name: "",
     email: "",
-    password: "",
+    avatar: "",
   };
   isLoading = false;
 
@@ -27,6 +27,20 @@ class UserStore {
       this.users = res.data;
     } catch (error) {
       console.error("Error fetching users:", error);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async updateMainUser(userData) {
+    try {
+      this.isLoading = true;
+      const res = await updateUser(userData);
+      this.mainUser = res.data;
+      sessionStorage.setItem("mainUser", JSON.stringify(res.data));
+    } catch (error) {
+      console.error("Error updating user:", error);
+      throw error;
     } finally {
       this.isLoading = false;
     }

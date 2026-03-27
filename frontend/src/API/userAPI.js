@@ -1,4 +1,4 @@
-import { client } from "./index";
+import { client, loggedInClient } from "./index";
 
 export const login = async (username, password) => {
   // OAuth2PasswordRequestForm expects form-url-encoded data
@@ -26,5 +26,20 @@ export const register = async (user) => {
 };
 export const getUsers = async () => {
   const res = await client.get("/users");
+  return res;
+};
+
+export const updateUser = async (userData) => {
+  const formData = new FormData();
+  if (userData.first_name !== undefined)
+    formData.append("first_name", userData.first_name);
+  if (userData.last_name !== undefined)
+    formData.append("last_name", userData.last_name);
+  if (userData.avatar !== undefined) formData.append("avatar", userData.avatar);
+  if (userData.password !== undefined)
+    formData.append("password", userData.password);
+  const res = await loggedInClient.put("/users/me", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   return res;
 };

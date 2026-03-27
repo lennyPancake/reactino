@@ -34,7 +34,7 @@
 
   --sidebar-width: 260px;
   --sidebar-collapsed-width: 64px;
-  --transition-sidebar: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-sidebar: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Текущая ширина сайдбара (меняется в JS через CSS custom prop на body) */
   --current-sidebar-width: var(--sidebar-width);

@@ -66,8 +66,8 @@
   .sidebar .sidebar-toggle-row {
     justify-content: flex-end;
   }
-  .toggle-btn {
-    visibility: hidden;
+  .sidebar-toggle-row {
+    display: none;
   }
 }
 

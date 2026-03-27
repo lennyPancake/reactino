@@ -4,14 +4,14 @@
   margin-left: 0px;
   width: 100%;
   max-width: 800px;
-  transition: margin-left var(--transition-sidebar);
+  transition: var(--transition-sidebar);
 }
 
 .posts-container {
   margin-left: var(--sidebar-width);
   padding: var(--spacing-lg);
   min-height: 100vh;
-  transition: margin-left var(--transition-sidebar);
+  transition: var(--transition-sidebar);
 }
 
 .posts-grid {

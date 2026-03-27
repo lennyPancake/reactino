@@ -2,21 +2,24 @@ import React, { useContext, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { RootStoreContext } from "..";
 import { Image, Dropdown } from "react-bootstrap";
+import { useState, useEffect } from "react";
 import "./MainUser.css";
+import { observer } from "mobx-react-lite";
 
-const MainUser = () => {
+const MainUser = observer(({ isExpanded }) => {
   const navigate = useNavigate();
   const { userStore } = useContext(RootStoreContext);
+  const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsOpen(false);
+    };
 
-  const mainUser = useMemo(() => {
-    const stored = sessionStorage.getItem("mainUser");
-    if (stored) {
-      const user = JSON.parse(stored);
-      userStore.mainUser = user;
-      return user;
-    }
-    return null;
-  }, [userStore]);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const { mainUser } = userStore;
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem("token");
@@ -29,26 +32,28 @@ const MainUser = () => {
       navigate(`/users/${mainUser.id}`);
     }
   }, [navigate, mainUser]);
-
-  if (!mainUser) {
-    navigate("/login");
-    return null;
-  }
-
+  const handleSettingsClick = useCallback(() => {
+    if (mainUser) {
+      navigate(`/users/${mainUser.id}/settings`);
+    }
+  }, [navigate, mainUser]);
+  useEffect(() => {
+    if (!mainUser && !sessionStorage.getItem("mainUser")) {
+      navigate("/login");
+    }
+  }, [mainUser, navigate]);
   return (
     <div className="user-profile-card">
       <div className="user-info" onClick={handleProfileClick}>
-        {(mainUser.avatar && (
+        {mainUser.avatar && (
           <Image
-            src={mainUser.avatar}
-            className="avatar avatar-md"
+            src={
+              mainUser.avatar
+                ? `${process.env.REACT_APP_BASE_URL}${mainUser.avatar}`
+                : `${process.env.REACT_APP_BASE_URL}/static/images/noavatar.png`
+            }
+            className={`avatar ${isExpanded ? "avatar-lg" : "avatar-sm"}`}
             alt={`${mainUser.first_name} ${mainUser.last_name}`}
-          />
-        )) || (
-          <Image
-            src={`${process.env.REACT_APP_BASE_URL}/static/images/noavatar.png`}
-            className="avatar avatar-md"
-            alt="Default Avatar"
           />
         )}
         <div className="user-details">
@@ -59,7 +64,11 @@ const MainUser = () => {
         </div>
       </div>
 
-      <Dropdown align="end">
+      <Dropdown
+        show={isOpen}
+        onToggle={(isOpen) => setIsOpen(isOpen)}
+        align="end"
+      >
         <Dropdown.Toggle
           variant="link"
           id="user-dropdown"
@@ -82,6 +91,9 @@ const MainUser = () => {
           <Dropdown.Item onClick={handleProfileClick} className="text-white">
             Мой профиль
           </Dropdown.Item>
+          <Dropdown.Item onClick={handleSettingsClick} className="text-white">
+            Настройки
+          </Dropdown.Item>
           <Dropdown.Divider />
           <Dropdown.Item onClick={handleLogout} className="text-danger">
             Выход
@@ -90,6 +102,6 @@ const MainUser = () => {
       </Dropdown>
     </div>
   );
-};
+});
 
 export default MainUser;
