@@ -95,7 +95,11 @@ const MainUser = observer(({ isExpanded }) => {
             Настройки
           </Dropdown.Item>
           <Dropdown.Divider />
-          <Dropdown.Item onClick={handleLogout} className="text-danger">
+          <Dropdown.Item
+            id="logout-item"
+            onClick={handleLogout}
+            className="text-danger"
+          >
             Выход
           </Dropdown.Item>
         </Dropdown.Menu>

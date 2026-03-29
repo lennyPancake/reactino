@@ -3,9 +3,11 @@ from pathlib import Path
 import pytest
 import time
 
+
 sys.path.insert(0, str(Path(__file__).parent))
 
-from pages.register_page import RegisterPage
+from pages.register_page import RegisterPage    
+from components.sidebar import Sidebar
 
 
 @pytest.mark.e2e
@@ -24,9 +26,14 @@ class TestAuthFlow:
             first_name="АвтоТест",
             last_name="Пользователь"
         )
-
+        
         print(f"Текущий URL после регистрации: {driver.current_url}")
-        assert any(x in driver.current_url for x in ["login", "posts", "feed"]), \
+        assert any(x in driver.current_url for x in ["users", "posts"]), \
             f"Не произошёл редирект. Текущий URL: {driver.current_url}"
-
         print("✅ Тест регистрации прошёл успешно")
+    def test_logout(self, auth_user, driver, base_url):
+        sidebar = Sidebar(auth_user)
+        sidebar.click_logout()
+        time.sleep(2)  # Небольшая пауза для стабильности теста
+        assert "login" in driver.current_url, f"Ожидался редирект на страницу логина, но текущий URL: {driver.current_url}"
+        print("✅ Тест выхода из аккаунта прошёл успешно")

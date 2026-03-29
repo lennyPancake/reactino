@@ -29,10 +29,13 @@ ALGORITHM = settings.ALGORITHM
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
 
-# CORS: allow frontend dev server access
+# CORS: allow frontend dev server access and Docker Compose service names
 origins = [
     "http://localhost:3000",
     "http://localhost:3001",
+    "http://frontend:3000",
+    "http://frontend:3001",
+    "http://backend:8000",
 ]
 
 app.add_middleware(

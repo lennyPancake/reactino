@@ -8,9 +8,13 @@ import models
 import sqlmodel
 from sqlmodel import SQLModel
 from core import database
+from core.config import settings
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+
+# Override alembic sqlalchemy URL with app settings (supports test env)
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

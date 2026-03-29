@@ -136,6 +136,7 @@ const Registration = () => {
           <Form.Group className="mb-3">
             <Form.Label>Подтвердите пароль</Form.Label>
             <Form.Control
+              name="password_repeat"
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
