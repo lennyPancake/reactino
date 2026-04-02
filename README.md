@@ -10,6 +10,7 @@
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
 
 Reactino - веб-приложение для блогинга с полным набором функций: регистрация пользователей, создание и управление постами, система комментариев, загрузка изображений.
+<img width="1563" height="980" alt="image" src="https://github.com/user-attachments/assets/1add1d5a-be15-4cd6-a813-5f27200d33b0" />
 
 ## ✨ Возможности
 
