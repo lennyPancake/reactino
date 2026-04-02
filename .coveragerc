@@ -1,0 +1,39 @@
+[run]
+# Директории для измерения покрытия
+source = backend
+
+# Пути для игнорирования
+omit =
+    */tests/*
+    */test_*.py
+    */__pycache__/*
+    */venv/*
+    */migrations/*
+    */__init__.py
+
+[report]
+# Исключить некоторые директории
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    @abstractmethod
+    @abstract
+
+# Минимальный процент покрытия для прохождения
+fail_under = 70
+
+# Пропустить файлы с低 покрытием
+skip_covered = False
+skip_empty = True
+
+[html]
+# Директория для HTML отчета
+directory = htmlcov
+
+[paths]
+source =
+    backend

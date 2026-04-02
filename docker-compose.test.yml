@@ -46,8 +46,8 @@ services:
     ports:
       - "3001:3000"
     environment:
-      - REACT_APP_API_URL=http://backend:8000 # ← важно: backend, а не localhost
-      - REACT_APP_BASE_URL=http://backend:8000 # ← для картинок
+      - REACT_APP_API_URL=http://backend:8000
+      - REACT_APP_BASE_URL=http://backend:8000
       - WDS_SOCKET_PORT=0
       - CHOKIDAR_USEPOLLING=true
     volumes:
@@ -94,7 +94,7 @@ services:
     command: >
       sh -c "
         echo '=== Waiting for all services to be fully ready ===' &&
-        sleep 28 &&
+        sleep 5 &&
         echo '=== Starting pytest ===' &&
         pytest . -v --html=/tests/report.html --self-contained-html
       "

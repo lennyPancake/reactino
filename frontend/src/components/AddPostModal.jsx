@@ -78,6 +78,7 @@ const AddPostModal = () => {
       </button>
 
       <Modal
+        data-testid="add-post-modal"
         show={show}
         onHide={handleClose}
         contentClassName="bg-dark text-white"

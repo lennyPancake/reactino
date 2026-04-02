@@ -4,6 +4,8 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
+from .pages.login_page import LoginPage
+from .pages.posts_page import PostsPage
 
 @pytest.fixture(scope="function")
 def driver():
@@ -34,17 +36,8 @@ def wait(driver):
 
 @pytest.fixture(scope="function")
 def auth_user(driver, base_url): #костыль
-    from pages.register_page import RegisterPage
-    unique_email = f"testuser_{int(time.time())}@example.com"
-    password = "TestPassword123!"
-    register_page = RegisterPage(driver, base_url)
-    register_page.register(
-        email=unique_email,
-        password=password,
-        first_name="АвтоТест",
-        last_name="Пользователь"
-    )
-    return driver
+    login = LoginPage(driver, base_url).open_login_page().login(driver)
+    return login 
 
 @pytest.hookimpl(tryfirst=True)
 def pytest_runtest_makereport(item, call):

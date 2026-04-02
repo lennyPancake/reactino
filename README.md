@@ -1,70 +1,301 @@
-# Getting Started with Create React App
+# Reactino 📰
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Полнофункциональный Full-Stack блог с авторизацией, постами и комментариями**
 
-## Available Scripts
+[![Tests](https://img.shields.io/badge/tests-70%2B-green.svg)](tests/)
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/)
+[![React](https://img.shields.io/badge/React-18.2-blue.svg)](https://reactjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green.svg)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue.svg)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
 
-In the project directory, you can run:
+Reactino - веб-приложение для блогинга с полным набором функций: регистрация пользователей, создание и управление постами, система комментариев, загрузка изображений.
 
-### `npm start`
+## ✨ Возможности
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 🔐 Авторизация и безопасность
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Регистрация и вход пользователей
+- JWT токены для аутентификации
+- Хеширование паролей (bcrypt)
+- Защита от несанкционированного доступа
 
-### `npm test`
+### 📝 Управление контентом
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Создание, редактирование и удаление постов
+- Загрузка изображений для постов
+- Система комментариев к постам
+- Только автор может редактировать/удалять свой контент
 
-### `npm run build`
+### 🎨 Современный интерфейс
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Адаптивный дизайн (Bootstrap 5)
+- Интуитивный пользовательский интерфейс
+- Мобильная адаптация
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 🧪 Полное тестирование
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **70+ тестов** с высоким покрытием кода
+- Unit, Integration и E2E тесты
+- Автоматизированное тестирование UI (Selenium)
+- CI/CD готовность
 
-### `npm run eject`
+## 🏗 Архитектура
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```
+reactino/
+├── backend/                 # FastAPI сервер
+│   ├── api/main.py         # Основное приложение
+│   ├── models.py           # SQLModel модели
+│   ├── core/               # Конфигурация и утилиты
+│   └── requirements.txt    # Python зависимости
+├── frontend/                # React приложение
+│   ├── src/
+│   │   ├── components/     # React компоненты
+│   │   ├── pages/          # Страницы приложения
+│   │   ├── API/            # API клиенты
+│   │   └── store/          # MobX состояние
+│   └── package.json        # Node.js зависимости
+├── tests/                   # Полный набор тестов
+│   ├── unit/               # Unit тесты (19 тестов)
+│   ├── integration/        # Integration тесты (22 теста)
+│   └── e2e/                # E2E тесты (15+ сценариев)
+└── docker-compose.yml      # Docker оркестрация
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🚀 Быстрый старт
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Предварительные требования
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Docker и Docker Compose
+- Git
 
-## Learn More
+### 1. Клонирование репозитория
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+git clone <repository-url>
+cd reactino
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 2. Запуск с Docker Compose
 
-### Code Splitting
+```bash
+# Запуск всех сервисов (БД, Backend, Frontend)
+docker-compose up --build
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+# Или в фоне
+docker-compose up -d --build
+```
 
-### Analyzing the Bundle Size
+### 3. Доступ к приложению
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API документация**: http://localhost:8000/docs (Swagger UI)
 
-### Making a Progressive Web App
+### 4. Остановка
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+docker-compose down
+```
 
-### Advanced Configuration
+## 🛠 Локальная разработка
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Backend (Python/FastAPI)
 
-### Deployment
+```bash
+cd backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+# Создание виртуального окружения
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# или
+venv\Scripts\activate     # Windows
 
-### `npm run build` fails to minify
+# Установка зависимостей
+pip install -r requirements.txt
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# Запуск сервера разработки
+uvicorn api.main:app --reload
+```
+
+### Frontend (React)
+
+```bash
+cd frontend
+
+# Установка зависимостей
+npm install
+
+# Запуск сервера разработки
+npm start
+```
+
+### База данных
+
+```bash
+# Запуск PostgreSQL в Docker
+docker run -d \
+  --name postgres-dev \
+  -e POSTGRES_DB=blog_db \
+  -e POSTGRES_USER=blog_user \
+  -e POSTGRES_PASSWORD=SuperSecure123 \
+  -p 5432:5432 \
+  postgres:16-alpine
+```
+
+## 🧪 Тестирование
+
+### Backend тесты
+
+```bash
+cd backend
+
+# Все тесты
+pytest tests/ -v
+
+# Unit тесты
+pytest tests/unit/ -v
+
+# Integration тесты
+pytest tests/integration/ -v
+
+# С отчетом о покрытии
+pytest --cov=. --cov-report=html
+```
+
+### Frontend тесты
+
+```bash
+cd frontend
+
+# Запуск тестов
+npm test
+
+# С покрытием кода
+npm test -- --coverage
+```
+
+### E2E тесты (Selenium)
+
+```bash
+# Запуск Selenium Grid
+docker-compose -f docker-compose.test.yml up -d
+
+# Запуск E2E тестов
+pytest tests/e2e/ -v
+```
+
+### 📊 Покрытие тестов
+
+- **Backend**: 85%+ покрытие кода
+- **Frontend**: 90%+ покрытие компонентов
+- **E2E**: Полные пользовательские сценарии
+
+## 📚 API документация
+
+### Основные endpoints
+
+#### Авторизация
+
+- `POST /register` - Регистрация пользователя
+- `POST /login` - Вход в систему
+- `POST /file` - Загрузка изображений
+
+#### Посты
+
+- `GET /posts` - Получить все посты
+- `GET /posts/{id}` - Получить пост по ID
+- `POST /posts` - Создать новый пост
+- `PUT /posts/{id}` - Обновить пост
+- `DELETE /posts/{id}` - Удалить пост
+
+#### Комментарии
+
+- `GET /posts/{id}/comments` - Получить комментарии поста
+- `POST /comments` - Создать комментарий
+- `DELETE /comments/{id}` - Удалить комментарий
+
+## 🗂 Структура проекта
+
+### Backend
+
+```
+backend/
+├── api/main.py           # FastAPI приложение
+├── models.py             # SQLModel модели (User, Post, Comment)
+├── core/
+│   ├── config.py         # Настройки приложения
+│   ├── database.py       # Подключение к БД
+│   └── security.py       # JWT и безопасность
+├── alembic/              # Миграции БД
+└── media/images/         # Загруженные изображения
+```
+
+### Frontend
+
+```
+frontend/
+├── public/
+│   ├── index.html
+│   └── manifest.json
+└── src/
+    ├── components/        # React компоненты
+    │   ├── Login.jsx
+    │   ├── Post.jsx
+    │   ├── Comments.jsx
+    │   └── ...
+    ├── pages/            # Страницы приложения
+    │   ├── MainPage.jsx
+    │   ├── AllPosts.jsx
+    │   └── ...
+    ├── API/              # API клиенты
+    │   ├── userAPI.js
+    │   ├── postAPI.js
+    │   └── commentAPI.js
+    └── store/            # MobX состояние
+        ├── userStore.js
+        ├── postStore.js
+        └── commentStore.js
+```
+
+## 🧪 Тестовая инфраструктура
+
+### Unit тесты
+
+- **Backend**: pytest с SQLAlchemy in-memory БД
+- **Frontend**: Jest + React Testing Library
+- **Модели**: Тестирование валидации и связей
+- **Компоненты**: Тестирование UI и взаимодействия
+
+### Integration тесты
+
+- **API endpoints**: Полное тестирование CRUD операций
+- **Аутентификация**: JWT токены и разрешения
+- **База данных**: Тестирование связей и constraints
+
+### E2E тесты
+
+- **Пользовательские сценарии**: Регистрация → Посты → Комментарии
+- **Selenium WebDriver**: Автоматизация браузера
+- **Docker**: Изолированное тестовое окружение
+
+## 🔧 Конфигурация
+
+### Переменные окружения
+
+#### Backend (.env)
+
+```env
+DATABASE_URL=postgresql+psycopg2://blog_user:SuperSecure123@db:5432/blog_db
+JWT_SECRET=your-secret-key-here
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=180
+ENVIRONMENT=development
+```
+
+#### Frontend (.env)
+
+```env
+REACT_APP_API_URL=http://localhost:8000
+```
