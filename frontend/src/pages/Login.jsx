@@ -1,6 +1,6 @@
 import React, { useState, useContext, useCallback } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { RootStoreContext } from "..";
+import RootStoreContext from "../RootStoreContext";
 import { Form, Button, Image } from "react-bootstrap";
 import { login } from "../API/userAPI";
 import "./Auth.css";

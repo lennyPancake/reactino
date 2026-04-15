@@ -108,7 +108,13 @@ npm test -- --coverage
 docker-compose -f docker-compose.test.yml up -d
 ```
 
-2. Запустите тесты:
+2. Чтобы поднять окружение вместе с тестовыми runner-сервисами (unit/integration/e2e):
+
+```bash
+docker-compose -f docker-compose.test.yml --profile test up -d
+```
+
+3. Запустите тесты:
 
 ```bash
 pytest tests/e2e/ -v

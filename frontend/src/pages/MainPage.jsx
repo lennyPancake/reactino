@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { RootStoreContext } from "../index";
+import RootStoreContext from "../RootStoreContext";
 import PostsList from "../components/PostsList";
 import AddPostModal from "../components/AddPostModal";
 import withAuth from "../components/withAuth";

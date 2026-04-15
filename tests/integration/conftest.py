@@ -3,8 +3,7 @@ import sys
 from pathlib import Path
 from sqlmodel import SQLModel, Session, create_engine
 from sqlmodel.pool import StaticPool
-
-# Добавляем backend в path
+# backend в path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "backend"))
 
 from core.database import get_session
@@ -28,10 +27,10 @@ def session_fixture():
 
 
 @pytest.fixture(name="client")
-def client_fixture(session_fixture):
+def client_fixture(session):
     """Создает тестовый FastAPI клиент"""
     def get_session_override():
-        return session_fixture
+        return session
 
     app.dependency_overrides[get_session] = get_session_override
     
@@ -43,7 +42,7 @@ def client_fixture(session_fixture):
 
 
 @pytest.fixture
-def test_user(session_fixture):
+def test_user(session):
     """Создает тестового пользователя в БД"""
     password_hash = bcrypt.hashpw("TestPass123".encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
     
@@ -54,14 +53,14 @@ def test_user(session_fixture):
         last_name="User",
         avatar=None
     )
-    session_fixture.add(user)
-    session_fixture.commit()
-    session_fixture.refresh(user)
+    session.add(user)
+    session.commit()
+    session.refresh(user)
     return user
 
 
 @pytest.fixture
-def test_post(session_fixture, test_user):
+def test_post(session, test_user):
     """Создает тестовый пост"""
     post = Post(
         title="Test Post",
@@ -69,14 +68,14 @@ def test_post(session_fixture, test_user):
         image_url=None,
         author_id=test_user.id
     )
-    session_fixture.add(post)
-    session_fixture.commit()
-    session_fixture.refresh(post)
+    session.add(post)
+    session.commit()
+    session.refresh(post)
     return post
 
 
 @pytest.fixture
-def auth_token(session_fixture, test_user):
+def auth_token(session, test_user):
     """Создает JWT токен для тестового пользователя"""
     from api.main import create_access_token
     return create_access_token({"sub": str(test_user.id)})

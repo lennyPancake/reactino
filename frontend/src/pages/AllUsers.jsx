@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { RootStoreContext } from "..";
+import RootStoreContext from "../RootStoreContext";
 import UsersList from "../components/UsersList";
 import withAuth from "../components/withAuth";
 import "./Pages.css";

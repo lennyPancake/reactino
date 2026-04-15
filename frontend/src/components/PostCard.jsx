@@ -3,7 +3,7 @@ import { Card, Image, Dropdown, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./PostCard.css";
 import { useContext } from "react";
-import { RootStoreContext } from "..";
+import RootStoreContext from "../RootStoreContext";
 
 const PostCard = ({
   post,

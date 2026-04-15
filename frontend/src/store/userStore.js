@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { getUsers, updateUser } from "../API/userAPI";
+
 class UserStore {
   users = [];
   mainUser = {
@@ -13,8 +14,8 @@ class UserStore {
 
   constructor() {
     makeAutoObservable(this);
-    this.isLoading = false;
   }
+
   getUser(id) {
     return this.users.find((user) => user.id === id);
   }
@@ -23,7 +24,6 @@ class UserStore {
     try {
       this.isLoading = true;
       const res = await getUsers();
-      console.log("полученные пользователи", res.data); //?
       this.users = res.data;
     } catch (error) {
       console.error("Error fetching users:", error);

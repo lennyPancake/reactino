@@ -1,6 +1,6 @@
-# Reactino 📰
+# Reactino (indev)📰
 
-**Полнофункциональный Full-Stack блог с авторизацией, постами и комментариями**
+** Полнофункциональный Full-Stack блог с авторизацией, постами и комментариями**
 
 [![Tests](https://img.shields.io/badge/tests-70%2B-green.svg)](tests/)
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/)
@@ -179,8 +179,11 @@ npm test -- --coverage
 ### E2E тесты (Selenium)
 
 ```bash
-# Запуск Selenium Grid
+# Запуск Selenium Grid и тестового окружения
 docker-compose -f docker-compose.test.yml up -d
+
+# Запуск тестовых runner-сервисов (unit/integration/e2e)
+docker-compose -f docker-compose.test.yml --profile test up -d
 
 # Запуск E2E тестов
 pytest tests/e2e/ -v

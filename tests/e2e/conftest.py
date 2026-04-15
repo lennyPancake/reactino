@@ -35,7 +35,7 @@ def wait(driver):
     return WebDriverWait(driver, 20)
 
 @pytest.fixture(scope="function")
-def auth_user(driver, base_url): #костыль
+def auth_user(driver, base_url):
     login = LoginPage(driver, base_url).open_login_page().login(driver)
     return login 
 

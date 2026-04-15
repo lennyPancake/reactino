@@ -24,10 +24,15 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "json-server": "json-server --watch ./json-server/db.json --port 3001",
-    "devserver": "nodemon ./json-server/index.js",
-    "dev": "concurrently \"npm run devserver\" \"npm start\""
+    "eject": "react-scripts eject"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(axios)/)"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    }
   },
   "eslintConfig": {
     "extends": [
@@ -48,9 +53,10 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.29.2",
+    "@babel/preset-react": "^7.28.5",
     "axios": "^1.5.0",
     "concurrently": "^8.2.1",
-    "json-server": "^0.17.3",
     "jwt-decode": "^3.1.2",
     "nodemon": "^3.0.1",
     "react-router-dom": "^6.16.0"

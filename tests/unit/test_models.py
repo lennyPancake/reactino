@@ -13,7 +13,7 @@ import bcrypt
 class TestPostModel:
     """Тесты для модели Post"""
     
-    def test_post_creation(self, session_fixture, test_user):
+    def test_post_creation(self, session, test_user):
         """Проверяем создание поста"""
         post = Post(
             title="Test Post",
@@ -21,39 +21,39 @@ class TestPostModel:
             image_url="/images/test.jpg",
             author_id=test_user.id
         )
-        session_fixture.add(post)
-        session_fixture.commit()
-        session_fixture.refresh(post)
+        session.add(post)
+        session.commit()
+        session.refresh(post)
         
         assert post.id is not None
         assert post.title == "Test Post"
         assert post.content == "Test content"
         assert post.author_id == test_user.id
     
-    def test_post_has_timestamps(self, session_fixture, test_user):
+    def test_post_has_timestamps(self, session, test_user):
         """Проверяем что у поста есть created_at и updated_at"""
         post = Post(
             title="Test",
             content="Content",
             author_id=test_user.id
         )
-        session_fixture.add(post)
-        session_fixture.commit()
+        session.add(post)
+        session.commit()
         
         assert post.created_at is not None
         assert post.updated_at is not None
         assert isinstance(post.created_at, datetime)
         assert isinstance(post.updated_at, datetime)
     
-    def test_post_image_url_is_optional(self, session_fixture, test_user):
+    def test_post_image_url_is_optional(self, session, test_user):
         """Проверяем что image_url опциональный"""
         post = Post(
             title="Test",
             content="Content",
             author_id=test_user.id
         )
-        session_fixture.add(post)
-        session_fixture.commit()
+        session.add(post)
+        session.commit()
         
         assert post.image_url is None
     
@@ -70,16 +70,16 @@ class TestPostModel:
         assert post_create.content == "Content"
         assert post_create.image_url == "/images/test.jpg"
     
-    def test_post_relationship_with_user(self, session_fixture, test_user):
+    def test_post_relationship_with_user(self, session, test_user):
         """Проверяем связь между Post и User"""
         post = Post(
             title="Test",
             content="Content",
             author_id=test_user.id
         )
-        session_fixture.add(post)
-        session_fixture.commit()
-        session_fixture.refresh(post)
+        session.add(post)
+        session.commit()
+        session.refresh(post)
         
         # Проверяем что можем получить автора через отношение
         assert post.author.id == test_user.id
@@ -89,51 +89,51 @@ class TestPostModel:
 class TestCommentModel:
     """Тесты для модели Comment"""
     
-    def test_comment_creation(self, session_fixture, test_user, test_post):
+    def test_comment_creation(self, session, test_user, test_post):
         """Проверяем создание комментария"""
         comment = Comment(
             text="Great post!",
             post_id=test_post.id,
             author_id=test_user.id
         )
-        session_fixture.add(comment)
-        session_fixture.commit()
-        session_fixture.refresh(comment)
+        session.add(comment)
+        session.commit()
+        session.refresh(comment)
         
         assert comment.id is not None
         assert comment.text == "Great post!"
         assert comment.post_id == test_post.id
         assert comment.author_id == test_user.id
     
-    def test_comment_author_relationship(self, session_fixture, test_user, test_post):
+    def test_comment_author_relationship(self, session, test_user, test_post):
         """Проверяем связь Comment с User"""
         comment = Comment(
             text="Test comment",
             post_id=test_post.id,
             author_id=test_user.id
         )
-        session_fixture.add(comment)
-        session_fixture.commit()
-        session_fixture.refresh(comment)
+        session.add(comment)
+        session.commit()
+        session.refresh(comment)
         
         assert comment.author.id == test_user.id
         assert comment.author.email == test_user.email
     
-    def test_comment_post_relationship(self, session_fixture, test_user, test_post):
+    def test_comment_post_relationship(self, session, test_user, test_post):
         """Проверяем связь Comment с Post"""
         comment = Comment(
             text="Test comment",
             post_id=test_post.id,
             author_id=test_user.id
         )
-        session_fixture.add(comment)
-        session_fixture.commit()
-        session_fixture.refresh(comment)
+        session.add(comment)
+        session.commit()
+        session.refresh(comment)
         
         assert comment.post.id == test_post.id
         assert comment.post.title == test_post.title
     
-    def test_post_has_comments_relationship(self, session_fixture, test_user, test_post):
+    def test_post_has_comments_relationship(self, session, test_user, test_post):
         """Проверяем что Post может хранить комментарии"""
         comment1 = Comment(
             text="Comment 1",
@@ -145,10 +145,10 @@ class TestCommentModel:
             post_id=test_post.id,
             author_id=test_user.id
         )
-        session_fixture.add(comment1)
-        session_fixture.add(comment2)
-        session_fixture.commit()
-        session_fixture.refresh(test_post)
+        session.add(comment1)
+        session.add(comment2)
+        session.commit()
+        session.refresh(test_post)
         
         assert len(test_post.comments) == 2
     
@@ -163,7 +163,7 @@ class TestCommentModel:
         assert comment_create.text == "Great post!"
         assert comment_create.post_id == 1
     
-    def test_user_has_comments_relationship(self, session_fixture, test_user, test_post):
+    def test_user_has_comments_relationship(self, session, test_user, test_post):
         """Проверяем что User может хранить комментарии"""
         comment1 = Comment(
             text="Comment 1",
@@ -175,9 +175,9 @@ class TestCommentModel:
             post_id=test_post.id,
             author_id=test_user.id
         )
-        session_fixture.add(comment1)
-        session_fixture.add(comment2)
-        session_fixture.commit()
-        session_fixture.refresh(test_user)
+        session.add(comment1)
+        session.add(comment2)
+        session.commit()
+        session.refresh(test_user)
         
         assert len(test_user.comments) == 2

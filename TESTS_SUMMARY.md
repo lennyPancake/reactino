@@ -238,6 +238,9 @@ npm test
 # Убедитесь что Docker Compose с Selenium запущен
 docker-compose -f docker-compose.test.yml up -d
 
+# Чтобы запустить тестовые runner-сервисы
+docker-compose -f docker-compose.test.yml --profile test up -d
+
 # Запустите тесты
 pytest tests/e2e/ -v
 ```

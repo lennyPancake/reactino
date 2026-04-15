@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { observer } from "mobx-react-lite";
-import { RootStoreContext } from "..";
+import RootStoreContext from "../RootStoreContext";
 import { Card, Image } from "react-bootstrap";
 import LoadingSpinner from "./LoadingSpinner";
 import "./Comments.css";

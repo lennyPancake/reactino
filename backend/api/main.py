@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from sqlmodel import SQLModel, Session, select
-from sqlalchemy.orm import joinedload
 from typing import Annotated, List, Optional
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
@@ -50,7 +49,8 @@ app.add_middleware(
 os.makedirs("media/images", exist_ok=True)
 app.mount("/images", StaticFiles(directory="media/images"), name="images")
 # Статические файлы проекта (логотип, favicon, возможно css/js если будут)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+os.makedirs("backend/static", exist_ok=True)
+app.mount("/static", StaticFiles(directory="backend/static"), name="static")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
@@ -76,14 +76,11 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], sessio
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        print(f"payload is ok?1")
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM], options={"verify_exp": False}) 
-        print(f"payload is ok?2")
         user_id: str = payload.get("sub")
         if user_id is None:
             raise credentials_exception
-    except JWTError as e:
-        print(f"DEBUG: JWT Decode Error: {e}", flush=True)
+    except JWTError:
         raise credentials_exception
 
     user = session.get(User, user_id)
@@ -182,10 +179,8 @@ async def upload_file(
 
 @app.get("/posts", response_model=List[PostRead])
 def get_posts(session: Session = Depends(get_session)):
-    # joinedload(Post.author) подтянет данные пользователя
     stmt = select(Post) 
     posts = session.exec(stmt).all()
-    print(f"Полученные посты: {posts}")
     return posts
 
 @app.get("/posts/{post_id}")
@@ -212,8 +207,6 @@ def create_post(
     session.add(new_post)
     session.commit()
     session.refresh(new_post)
-    
-    print("мой пост после сохранения:", new_post)
     return new_post
 
 @app.put("/posts/{post_id}")
@@ -273,12 +266,10 @@ def get_comments(post_id: int, session: Session = Depends(get_session)):
 
 @app.post("/comments", response_model=CommentRead)
 def create_comment(
-    comment_data: CommentCreate, # Ждем только JSON
+    comment_data: CommentCreate,
     current_user: User = Depends(get_current_user),
     session: Session = Depends(get_session)
 ):
-    print(f"Полученные данные для комментария: {comment_data}")
-    # Проверяем пост
     post = session.get(Post, comment_data.post_id)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")

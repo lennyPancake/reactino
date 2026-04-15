@@ -1,6 +1,6 @@
 import React, { useState, useContext, useCallback, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { RootStoreContext } from "..";
+import RootStoreContext from "../RootStoreContext";
 import { Form, Button, Image } from "react-bootstrap";
 import { register } from "../API/userAPI";
 import { loadFile } from "../API/fileAPI";
@@ -48,7 +48,7 @@ const Registration = () => {
       }
 
       if (!userData.password || userData.password.length < 4) {
-        setError("Пароль должен быть не менее 4 символов");
+        setError("Пароль должен быть не менее 4 символа");
         return;
       }
 
@@ -129,7 +129,7 @@ const Registration = () => {
               name="password"
               value={userData.password}
               onChange={handleInputChange}
-              placeholder="Минимум 4 символа"
+              placeholder="Пароль"
             />
           </Form.Group>
 

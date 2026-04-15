@@ -89,7 +89,7 @@ class TestJWTToken:
 class TestUserModel:
     """Тесты для модели User"""
     
-    def test_user_creation(self, session_fixture):
+    def test_user_creation(self, session):
         """Проверяем создание пользователя"""
         password_hash = bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
         
@@ -99,16 +99,16 @@ class TestUserModel:
             first_name="John",
             last_name="Doe"
         )
-        session_fixture.add(user)
-        session_fixture.commit()
-        session_fixture.refresh(user)
+        session.add(user)
+        session.commit()
+        session.refresh(user)
         
         assert user.id is not None
         assert user.email == "user@example.com"
         assert user.first_name == "John"
         assert user.last_name == "Doe"
     
-    def test_user_has_default_created_at(self, session_fixture):
+    def test_user_has_default_created_at(self, session):
         """Проверяем что у пользователя есть дата создания"""
         password_hash = bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
         
@@ -116,22 +116,22 @@ class TestUserModel:
             email="user@example.com",
             password_hash=password_hash
         )
-        session_fixture.add(user)
-        session_fixture.commit()
+        session.add(user)
+        session.commit()
         
-        assert user.created_at is not None
+        assert user.created_at is not None, "У пользователя должна быть дата создания"
     
-    def test_user_email_uniqueness(self, session_fixture):
+    def test_user_email_uniqueness(self, session):
         """Проверяем constraint уникальности email"""
         password_hash = bcrypt.hashpw("password".encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
         
         user1 = User(email="unique@example.com", password_hash=password_hash)
         user2 = User(email="unique@example.com", password_hash=password_hash)
         
-        session_fixture.add(user1)
-        session_fixture.commit()
-        session_fixture.add(user2)
+        session.add(user1)
+        session.commit()
+        session.add(user2)
         
         # SQLAlchemy должен вызвать ошибку при коммите
         with pytest.raises(Exception):  # IntegrityError
-            session_fixture.commit()
+            session.commit()

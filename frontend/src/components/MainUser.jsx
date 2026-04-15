@@ -1,6 +1,6 @@
 import React, { useContext, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { RootStoreContext } from "..";
+import RootStoreContext from "../RootStoreContext";
 import { Image, Dropdown } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import "./MainUser.css";

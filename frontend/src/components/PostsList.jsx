@@ -1,7 +1,7 @@
 import React, { useContext, useState, useMemo, useCallback } from "react";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
-import { RootStoreContext } from "..";
+import RootStoreContext from "../RootStoreContext";
 import PostCard from "./PostCard";
 import EditPostModal from "./EditPostModal";
 import LoadingSpinner from "./LoadingSpinner";

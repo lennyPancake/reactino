@@ -1,6 +1,6 @@
 import React, { useState, useContext, useCallback } from "react";
 import { Form, Button } from "react-bootstrap";
-import { RootStoreContext } from "..";
+import RootStoreContext from "../RootStoreContext";
 import "./AddComment.css";
 
 const AddComment = ({ postId }) => {

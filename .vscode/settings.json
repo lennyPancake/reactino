@@ -1,3 +1,9 @@
 {
-  "python.analysis.extraPaths": ["./backend"]
+  "python.analysis.extraPaths": ["./backend"],
+  "chat.tools.terminal.autoApprove": {
+    "/^d:/projects/reactino/\\.venv/Scripts/python\\.exe -m pip install httpx$/": {
+      "approve": true,
+      "matchCommandLine": true
+    }
+  }
 }

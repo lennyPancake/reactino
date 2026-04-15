@@ -1,6 +1,6 @@
 import React, { useState, useContext, useCallback } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { RootStoreContext } from "..";
+import RootStoreContext from "../RootStoreContext";
 import { loadFile } from "../API/fileAPI";
 import "./PostModal.css";
 

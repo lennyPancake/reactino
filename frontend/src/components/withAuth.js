@@ -7,7 +7,6 @@ const withAuth = (WrappedComponent) => {
   const AuthenticatedComponent = (props) => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const validateToken = useCallback(() => {
       const token = localStorage.getItem("token");
@@ -40,16 +39,14 @@ const withAuth = (WrappedComponent) => {
 
     useEffect(() => {
       const isValid = validateToken();
-      setIsAuthenticated(isValid);
       setIsLoading(false);
+      if (!isValid) {
+        return;
+      }
     }, [validateToken]);
 
     if (isLoading) {
       return <LoadingSpinner />;
-    }
-
-    if (!isAuthenticated) {
-      return null;
     }
 
     return <WrappedComponent {...props} />;

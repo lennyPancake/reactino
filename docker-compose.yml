@@ -26,6 +26,15 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'python -c "import urllib.request; urllib.request.urlopen(''http://127.0.0.1:8000/health'')"',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - ./backend:/app
     command: uvicorn api.main:app --host 0.0.0.0 --reload
@@ -37,14 +46,14 @@ services:
       - "3000:3000"
     environment:
       - REACT_APP_API_URL=http://localhost:8000
-      - WDS_SOCKET_PORT=0 # Исправляет проблему с Hot Reload в Docker (для CRA)
-      - CHOKIDAR_USEPOLLING=true # Чтобы изменения файлов подхватывались в Windows/Mac
+      - WDS_SOCKET_PORT=0
+      - CHOKIDAR_USEPOLLING=true
     volumes:
       - ./frontend:/app
-      - /app/node_modules # Чтобы локальные node_modules не затирали контейнерные
+      - /app/node_modules
     depends_on:
       - backend
-    stdin_open: true # Нужно для интерактивного режима npm start
+    stdin_open: true
     tty: true
 
 volumes:

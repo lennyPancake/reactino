@@ -1,5 +1,5 @@
 import React, { useContext, useCallback } from "react";
-import { RootStoreContext } from "..";
+import RootStoreContext from "../RootStoreContext";
 import { observer } from "mobx-react-lite";
 import { Image, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo } from "react";
 import { observer } from "mobx-react-lite";
-import { RootStoreContext } from "..";
+import RootStoreContext from "../RootStoreContext";
 import PostCard from "./PostCard";
 import AddComment from "./AddComment";
 import LoadingSpinner from "./LoadingSpinner";
@@ -38,7 +38,7 @@ const Post = observer(({ postId }) => {
           showFullContent={true}
           showBackButton={true}
         />
-        
+
         <Comments postId={postId} />
         <AddComment postId={postId} />
       </div>

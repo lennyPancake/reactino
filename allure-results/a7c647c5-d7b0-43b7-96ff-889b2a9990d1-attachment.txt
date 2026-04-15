@@ -1,0 +1,3 @@
+Регистрация с email: testuser_1776244798@example.com
+URL после регистрации: http://frontend:3000/users/5
+✅ Регистрация прошла успешно

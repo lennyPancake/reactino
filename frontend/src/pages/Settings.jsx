@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { RootStoreContext } from "..";
+import RootStoreContext from "../RootStoreContext";
 import { Form, Button, Alert, Image, Spinner } from "react-bootstrap";
 import { loadFile } from "../API/fileAPI";
 import "./Setting.css";

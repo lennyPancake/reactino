@@ -1,0 +1,2 @@
+Тест начинается с email: testuser_1776261292@example.com
+Текущий URL после регистрации: http://frontend:3000/register
